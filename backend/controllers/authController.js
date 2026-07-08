@@ -206,6 +206,7 @@ const verifyOtp = async (req, res) => {
         id:          user._id,
         email:       user.email,
         companyName: user.companyName,
+        ownerName:   user.ownerName,
       },
     });
   } catch (err) {
@@ -346,6 +347,7 @@ const login = async (req, res) => {
         id:          user._id,
         email:       user.email,
         companyName: user.companyName,
+        ownerName:   user.ownerName,
       },
     });
   } catch (err) {
