@@ -29,10 +29,10 @@ export default function InvoicingPage() {
 
   // Mock invoice data for the background preview ledger
   const mockInvoices = [
-    { id: 'INV-2026-004', date: 'Jul 08, 2026', client: 'Karan Johar (Brass Corp)', gstin: '27AAAAA1111A1Z1', amount: 45000, tax: 8100, total: 53100, status: 'Pending' },
+    { id: 'INV-2026-004', date: 'Jul 08, 2026', client: 'Karan Johar (Brass Corp)', gstin: '27AAAAA1111A1Z1', amount: 45001, tax: 8100, total: 53100, status: 'Pending' },
     { id: 'INV-2026-003', date: 'Jul 04, 2026', client: 'Ramesh Fabrics', gstin: '24BBBBB2222B2Z2', amount: 120000, tax: 21600, total: 141600, status: 'Paid' },
     { id: 'INV-2026-002', date: 'Jun 28, 2026', client: 'Sharma Textiles', gstin: '22CCCCC3333C3Z3', amount: 89000, tax: 16020, total: 105020, status: 'Paid' },
-    { id: 'INV-2026-001', date: 'Jun 15, 2026', client: 'Acme Automotives', gstin: '27DDDDD4444D4Z4', amount: 350000, tax: 63000, total: 413000, status: 'Paid' },
+    { id: 'INV-2026-001', date: 'Jun 15, 2026', client: 'Acme Automotives', gstin: '27DDDDD4444D4Z4', amount: 350010, tax: 63000, total: 413000, status: 'Paid' },
   ];
 
   return (
