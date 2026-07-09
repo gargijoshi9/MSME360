@@ -77,7 +77,7 @@ export default function SettingsPage() {
         <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-2.5">
           <Settings className="h-7 w-7 text-primary" /> Settings
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-muted mt-1">
           Manage your business credentials, profile details, and external channel integrations.
         </p>
       </div>
@@ -88,11 +88,11 @@ export default function SettingsPage() {
           <div className="p-2.5 bg-primary/10 border border-primary/20 text-primary rounded-xl text-xs font-bold flex items-center gap-2">
             <User className="h-4 w-4" /> Account Profile
           </div>
-          <div className="p-2.5 hover:bg-input rounded-xl text-xs font-semibold text-slate-500 flex items-center gap-2 cursor-pointer transition-colors" onClick={() => triggerToast('Security settings unlock in Phase 2.')}>
-            <Sliders className="h-4 w-4 text-slate-400" /> Security & Billing
+          <div className="p-2.5 hover:bg-input rounded-xl text-xs font-semibold text-muted flex items-center gap-2 cursor-pointer transition-colors" onClick={() => triggerToast('Security settings unlock in Phase 2.')}>
+            <Sliders className="h-4 w-4 text-subtle" /> Security & Billing
           </div>
-          <div className="p-2.5 hover:bg-input rounded-xl text-xs font-semibold text-slate-500 flex items-center gap-2 cursor-pointer transition-colors" onClick={() => triggerToast('Notification settings unlock in Phase 2.')}>
-            <Sliders className="h-4 w-4 text-slate-400" /> Notifications
+          <div className="p-2.5 hover:bg-input rounded-xl text-xs font-semibold text-muted flex items-center gap-2 cursor-pointer transition-colors" onClick={() => triggerToast('Notification settings unlock in Phase 2.')}>
+            <Sliders className="h-4 w-4 text-subtle" /> Notifications
           </div>
         </div>
 
@@ -100,14 +100,14 @@ export default function SettingsPage() {
         <div className="md:col-span-2 space-y-8">
           {/* Profile Form */}
           <div className="bg-card border border-border rounded-2xl shadow-sm p-6">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 border-b border-border pb-3 mb-5">
+            <h3 className="text-sm font-bold text-foreground border-b border-border pb-3 mb-5">
               Account Profile
             </h3>
             
             <form onSubmit={handleSaveProfile} className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Owner Name</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Owner Name</label>
                   <input
                     type="text"
                     value={formData.ownerName}
@@ -117,7 +117,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Company Name</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Company Name</label>
                   <input
                     type="text"
                     value={formData.companyName}
@@ -129,18 +129,18 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email Address</label>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Email Address</label>
                 <input
                   type="email"
                   value={formData.email}
-                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-border bg-slate-100 dark:bg-slate-800 text-slate-400 outline-none cursor-not-allowed font-medium"
+                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-border bg-input text-subtle outline-none cursor-not-allowed font-medium"
                   disabled
                 />
               </div>
 
               <div className="grid sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Business Type</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Business Type</label>
                   <select
                     value={formData.businessType}
                     onChange={(e) => setFormData({...formData, businessType: e.target.value})}
@@ -153,16 +153,16 @@ export default function SettingsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Currency</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Currency</label>
                   <input
                     type="text"
                     value={formData.currency}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-border bg-slate-100 dark:bg-slate-800 text-slate-400 outline-none cursor-not-allowed font-medium"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-border bg-input text-subtle outline-none cursor-not-allowed font-medium"
                     disabled
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Default Tax (GST %)</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Default Tax (GST %)</label>
                   <input
                     type="number"
                     value={formData.taxRate}
@@ -183,7 +183,7 @@ export default function SettingsPage() {
 
           {/* Integrations Card */}
           <div className="bg-card border border-border rounded-2xl shadow-sm p-6">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 border-b border-border pb-3 mb-5">
+            <h3 className="text-sm font-bold text-foreground border-b border-border pb-3 mb-5">
               Integrations (Phase 2 Preview)
             </h3>
             
@@ -195,11 +195,11 @@ export default function SettingsPage() {
                     <MessageSquare className="h-5 w-5 fill-current" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
                       WhatsApp Business API 
-                      <span className="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded font-bold uppercase">Phase 2</span>
+                      <span className="text-[9px] bg-input text-muted px-1.5 py-0.5 rounded font-bold uppercase">Phase 2</span>
                     </h4>
-                    <p className="text-[11px] text-slate-400 leading-relaxed font-medium mt-0.5">
+                    <p className="text-[11px] text-muted leading-relaxed font-medium mt-0.5">
                       Sync and reply to customer inquiries instantly. Requires Phone Number ID setup.
                     </p>
                   </div>
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                   onClick={() => handleConnectIntegration('whatsapp')}
                   className="px-3.5 py-2 bg-card border border-border hover:bg-input rounded-xl font-bold text-[11px] transition-all flex items-center gap-1.5 self-start sm:self-center shrink-0"
                 >
-                  <LinkIcon className="h-3.5 w-3.5 text-slate-400" /> Connect Setup
+                  <LinkIcon className="h-3.5 w-3.5 text-subtle" /> Connect Setup
                 </button>
               </div>
 
@@ -219,11 +219,11 @@ export default function SettingsPage() {
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
                       Gmail Google Accounts 
-                      <span className="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded font-bold uppercase">Phase 2</span>
+                      <span className="text-[9px] bg-input text-muted px-1.5 py-0.5 rounded font-bold uppercase">Phase 2</span>
                     </h4>
-                    <p className="text-[11px] text-slate-400 leading-relaxed font-medium mt-0.5">
+                    <p className="text-[11px] text-muted leading-relaxed font-medium mt-0.5">
                       Sync customer mail histories and auto-triage emails using OAuth2 client flows.
                     </p>
                   </div>
@@ -232,7 +232,7 @@ export default function SettingsPage() {
                   onClick={() => handleConnectIntegration('gmail')}
                   className="px-3.5 py-2 bg-card border border-border hover:bg-input rounded-xl font-bold text-[11px] transition-all flex items-center gap-1.5 self-start sm:self-center shrink-0"
                 >
-                  <LinkIcon className="h-3.5 w-3.5 text-slate-400" /> Connect OAuth
+                  <LinkIcon className="h-3.5 w-3.5 text-subtle" /> Connect OAuth
                 </button>
               </div>
             </div>
@@ -245,7 +245,7 @@ export default function SettingsPage() {
         <div className={`fixed bottom-24 right-6 left-6 md:left-auto md:w-96 z-50 rounded-2xl p-4 shadow-2xl border flex items-start gap-3 animate-slideIn ${
           toastType === 'success' 
             ? 'bg-emerald-900 border-emerald-800 text-white' 
-            : 'bg-slate-900 border-slate-800 text-white'
+            : 'bg-card border-border text-foreground'
         }`}>
           <div className={`p-1.5 border rounded-lg shrink-0 mt-0.5 ${
             toastType === 'success' 
@@ -262,13 +262,13 @@ export default function SettingsPage() {
             <h4 className="text-xs font-bold">
               {toastType === 'success' ? 'Settings Saved' : 'Phase 2 Boilerplate'}
             </h4>
-            <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+            <p className="text-[11px] text-muted leading-relaxed font-medium">
               {toastMessage}
             </p>
           </div>
           <button 
             onClick={() => setShowToast(false)}
-            className="text-slate-500 hover:text-slate-300 transition-colors shrink-0"
+            className="text-subtle hover:text-foreground transition-colors shrink-0"
           >
             <X className="h-4 w-4" />
           </button>

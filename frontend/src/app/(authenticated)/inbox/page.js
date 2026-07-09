@@ -185,7 +185,7 @@ export default function InboxPage() {
         {/* Search */}
         <div className="p-4 border-b border-border flex items-center gap-2">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-subtle" />
             <input
               type="text"
               placeholder="Search conversations..."
@@ -205,7 +205,7 @@ export default function InboxPage() {
               className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border ${
                 filterChannel === 'all' 
                   ? 'bg-primary text-white border-primary' 
-                  : 'bg-card text-slate-500 border-border hover:bg-input'
+                  : 'bg-card text-muted border-border hover:bg-input'
               }`}
             >
               All Channels
@@ -215,7 +215,7 @@ export default function InboxPage() {
               className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border flex items-center gap-1 ${
                 filterChannel === 'whatsapp' 
                   ? 'bg-emerald-500 text-white border-emerald-500' 
-                  : 'bg-card text-slate-500 border-border hover:bg-input'
+                  : 'bg-card text-muted border-border hover:bg-input'
               }`}
             >
               <MessageCircle className="h-3 w-3" /> WhatsApp
@@ -225,7 +225,7 @@ export default function InboxPage() {
               className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border flex items-center gap-1 ${
                 filterChannel === 'gmail' 
                   ? 'bg-blue-500 text-white border-blue-500' 
-                  : 'bg-card text-slate-500 border-border hover:bg-input'
+                  : 'bg-card text-muted border-border hover:bg-input'
               }`}
             >
               <Mail className="h-3 w-3" /> Gmail
@@ -240,8 +240,8 @@ export default function InboxPage() {
                 onClick={() => setFilterCategory(cat)}
                 className={`px-2 py-0.5 text-[9px] font-semibold rounded-md border ${
                   filterCategory === cat
-                    ? 'bg-slate-700 text-white border-slate-700 dark:bg-slate-200 dark:text-slate-800'
-                    : 'bg-card text-slate-500 border-border hover:bg-input'
+                    ? 'bg-foreground text-background border-foreground dark:bg-foreground dark:text-background'
+                    : 'bg-card text-muted border-border hover:bg-input'
                 }`}
               >
                 {cat === 'all' ? 'All Intents' : cat}
@@ -253,7 +253,7 @@ export default function InboxPage() {
         {/* Threads list */}
         <div className="flex-1 overflow-y-auto divide-y divide-border">
           {filteredThreads.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 flex flex-col items-center justify-center gap-2">
+            <div className="p-8 text-center text-subtle flex flex-col items-center justify-center gap-2">
               <InboxIcon className="h-8 w-8 opacity-50" />
               <span className="text-xs font-semibold">No messages found</span>
             </div>
@@ -270,15 +270,15 @@ export default function InboxPage() {
                   <span className={`text-xs font-bold truncate ${thread.unread ? 'text-primary' : ''}`}>
                     {thread.name}
                   </span>
-                  <span className="text-[10px] text-slate-400 shrink-0">{thread.time}</span>
+                  <span className="text-[10px] text-subtle shrink-0">{thread.time}</span>
                 </div>
                 
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate w-full">
+                <div className="text-[11px] text-muted truncate w-full">
                   {thread.summary}
                 </div>
 
                 <div className="flex items-center justify-between w-full mt-1.5">
-                  <div className="flex items-center gap-1.5 text-[9px] font-semibold text-slate-400">
+                  <div className="flex items-center gap-1.5 text-[9px] font-semibold text-subtle">
                     {thread.platform === 'whatsapp' ? (
                       <MessageCircle className="h-3.5 w-3.5 text-emerald-500 fill-current" />
                     ) : (
@@ -292,7 +292,7 @@ export default function InboxPage() {
                       thread.category === 'Lead' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' :
                       thread.category === 'Inquiry' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600' :
                       thread.category === 'Complaint' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600' :
-                      'bg-slate-100 text-slate-500'
+                      'bg-input text-muted'
                     }`}>
                       {thread.category}
                     </span>
@@ -319,11 +319,11 @@ export default function InboxPage() {
             </div>
             <div>
               <h3 className="text-xs font-bold">{activeThread.name}</h3>
-              <p className="text-[10px] text-slate-400 font-medium">{activeThread.contact}</p>
+              <p className="text-[10px] text-muted font-medium">{activeThread.contact}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded border border-border">
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-input text-muted rounded border border-border">
               Intent: {activeThread.category}
             </span>
           </div>
@@ -341,7 +341,7 @@ export default function InboxPage() {
                     : 'bg-card border border-border text-foreground rounded-tl-none'
                 }`}>
                   <p className="text-xs leading-relaxed font-medium">{msg.text}</p>
-                  <span className={`block text-[9px] mt-1 text-right ${isAgent ? 'text-white/70' : 'text-slate-400'}`}>
+                  <span className={`block text-[9px] mt-1 text-right ${isAgent ? 'text-white/70' : 'text-subtle'}`}>
                     {msg.time}
                   </span>
                 </div>
@@ -379,7 +379,7 @@ export default function InboxPage() {
 
         <div className="space-y-4">
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Intent Tagging</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Intent Tagging</h4>
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-500/10 text-emerald-500 rounded-lg border border-emerald-500/20 uppercase">
                 {activeThread.category}
@@ -391,15 +391,15 @@ export default function InboxPage() {
           </div>
 
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Executive Summary</h4>
-            <div className="p-3 bg-input border border-border rounded-xl text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Executive Summary</h4>
+            <div className="p-3 bg-input border border-border rounded-xl text-xs text-muted leading-relaxed font-medium">
               {activeThread.summary}
             </div>
           </div>
 
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Suggested Smart Reply</h4>
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted">Suggested Smart Reply</h4>
               <button 
                 onClick={useAiDraft}
                 className="text-[10px] text-primary hover:underline font-bold flex items-center gap-0.5"
@@ -413,7 +413,7 @@ export default function InboxPage() {
           </div>
         </div>
 
-        <div className="mt-auto pt-4 border-t border-border flex items-center gap-2 text-[10px] text-slate-400 font-semibold">
+        <div className="mt-auto pt-4 border-t border-border flex items-center gap-2 text-[10px] text-muted font-semibold">
           <Check className="h-4 w-4 text-emerald-500" />
           <span>Real-time analysis powered by Gemini</span>
         </div>

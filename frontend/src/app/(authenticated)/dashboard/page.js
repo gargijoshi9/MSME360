@@ -90,7 +90,7 @@ export default function DashboardPage() {
       case 'Complaint':
         return 'bg-orange-50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-900/30';
       default:
-        return 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-border';
+        return 'bg-input text-muted border-border';
     }
   };
 
@@ -101,7 +101,7 @@ export default function DashboardPage() {
       case 'medium':
         return 'text-amber-500 bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/30';
       default:
-        return 'text-slate-400 bg-slate-50 dark:bg-slate-800 border-border';
+        return 'text-muted bg-input border-border';
     }
   };
 
@@ -113,7 +113,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Welcome back, <span className="text-primary">{user?.ownerName || 'Business Owner'}</span>!
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-muted mt-1">
             Here's what happened with your business chats and emails today.
           </p>
         </div>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm flex items-center justify-between hover:border-primary/25 transition-all duration-150">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Messages</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Pending Messages</span>
             <h3 className="text-3xl font-extrabold mt-1">8</h3>
             <span className="text-[11px] font-medium text-emerald-500 flex items-center gap-1 mt-1">
               <Clock className="h-3 w-3" /> Average response: 4 mins
@@ -139,9 +139,9 @@ export default function DashboardPage() {
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm flex items-center justify-between hover:border-red-500/25 transition-all duration-150">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Urgent Signals</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Urgent Signals</span>
             <h3 className="text-3xl font-extrabold text-red-500 mt-1">3</h3>
-            <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 mt-1">
+            <span className="text-[11px] font-medium text-subtle flex items-center gap-1 mt-1">
               Requires immediate action
             </span>
           </div>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
 
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm flex items-center justify-between hover:border-emerald-500/25 transition-all duration-150">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Classified Today</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Classified Today</span>
             <h3 className="text-3xl font-extrabold mt-1">27</h3>
             <span className="text-[11px] font-medium text-emerald-500 flex items-center gap-1 mt-1">
               +14% since yesterday
@@ -163,15 +163,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm flex items-center justify-between hover:border-slate-400/25 transition-all duration-150">
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm flex items-center justify-between hover:border-subtle/25 transition-all duration-150">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">GST Invoice Queue</span>
-            <h3 className="text-3xl font-extrabold text-slate-400 mt-1">Locked</h3>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">GST Invoice Queue</span>
+            <h3 className="text-3xl font-extrabold text-subtle mt-1">Locked</h3>
             <span className="text-[11px] font-medium text-primary hover:underline flex items-center gap-1 mt-1">
               <Link href="/invoicing" className="flex items-center gap-1">Unlocks in Phase 2 <ExternalLink className="h-2.5 w-2.5" /></Link>
             </span>
           </div>
-          <div className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-xl">
+          <div className="p-3 bg-input text-subtle rounded-xl">
             <CheckCircle2 className="h-6 w-6" />
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function DashboardPage() {
           <div className="p-6 border-b border-border flex items-center justify-between bg-card/50">
             <div>
               <h2 className="text-lg font-bold">Recent Message Classifications</h2>
-              <p className="text-xs text-slate-400">Live AI intent sorting and analysis logs</p>
+              <p className="text-xs text-subtle">Live AI intent sorting and analysis logs</p>
             </div>
             <Link 
               href="/inbox" 
@@ -199,11 +199,11 @@ export default function DashboardPage() {
               <div key={item.id} className="p-6 hover:bg-input/30 transition-colors flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="space-y-1.5 max-w-xl">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-semibold tracking-tight text-slate-700 dark:text-slate-300">
+                    <span className="text-sm font-semibold tracking-tight text-foreground">
                       {item.sender}
                     </span>
-                    <span className="text-slate-300 dark:text-slate-700">•</span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <span className="text-subtle dark:text-subtle">•</span>
+                    <span className="text-xs text-subtle flex items-center gap-1">
                       {item.platform === 'whatsapp' ? (
                         <MessageCircle className="h-3.5 w-3.5 text-emerald-500 fill-current" />
                       ) : (
@@ -211,16 +211,16 @@ export default function DashboardPage() {
                       )}
                       {item.platform === 'whatsapp' ? 'WhatsApp' : 'Gmail'}
                     </span>
-                    <span className="text-slate-300 dark:text-slate-700">•</span>
-                    <span className="text-xs text-slate-400">{item.time}</span>
+                    <span className="text-subtle dark:text-subtle">•</span>
+                    <span className="text-xs text-subtle">{item.time}</span>
                   </div>
                   
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                  <p className="text-sm font-medium text-foreground">
                     "{item.text}"
                   </p>
                   
-                  <p className="text-xs text-slate-500">
-                    <span className="font-semibold text-slate-600 dark:text-slate-400">AI Summary:</span> {item.summary}
+                  <p className="text-xs text-muted">
+                    <span className="font-semibold text-muted">AI Summary:</span> {item.summary}
                   </p>
                 </div>
 
@@ -245,7 +245,7 @@ export default function DashboardPage() {
               Coming in Phase 2
             </span>
             <h3 className="text-lg font-bold mb-2">GST Invoicing Integration</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+            <p className="text-sm text-muted leading-relaxed mb-4">
               Convert WhatsApp pricing queries into GST-compliant ledger invoices immediately. Eliminate duplicate manual billing entries.
             </p>
             <Link 
@@ -262,7 +262,7 @@ export default function DashboardPage() {
               Coming in Phase 3
             </span>
             <h3 className="text-lg font-bold mb-2">National B2B Suppliers</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+            <p className="text-sm text-muted leading-relaxed mb-4">
               Search vetted wholesale suppliers of textile, machinery parts, metal ores, and organic raw products near you.
             </p>
             <Link 

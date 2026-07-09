@@ -78,7 +78,7 @@ export default function SignupPage() {
 
       <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-xl p-8 transition-colors duration-200">
         <h2 className="text-2xl font-bold tracking-tight text-center mb-1">Create your account</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 text-center mb-8">
+        <p className="text-sm text-muted text-center mb-8">
           Start managing your business communications today.
         </p>
 
@@ -98,7 +98,7 @@ export default function SignupPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Company Name</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Company Name</label>
             <input
               type="text"
               name="companyName"
@@ -111,7 +111,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Owner Name</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Owner Name</label>
             <input
               type="text"
               name="ownerName"
@@ -124,7 +124,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Email Address</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Email Address</label>
             <input
               type="email"
               name="email"
@@ -137,7 +137,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Password</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Password</label>
             <input
               type="password"
               name="password"
@@ -152,13 +152,13 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-slate-400 text-white font-semibold rounded-xl transition-all shadow hover:shadow-primary/20 flex items-center justify-center gap-2 transform hover:-translate-y-[1px]"
+            className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-muted text-white font-semibold rounded-xl transition-all shadow hover:shadow-primary/20 flex items-center justify-center gap-2 transform hover:-translate-y-[1px]"
           >
             {loading ? 'Creating Account...' : 'Continue'} <ArrowRight className="h-4 w-4" />
           </button>
         </form>
 
-        <p className="text-sm text-center text-slate-600 dark:text-slate-400 mt-6">
+        <p className="text-sm text-center text-muted mt-6">
           Already have an account?{' '}
           <Link href="/login" className="text-primary hover:underline font-semibold">
             Sign in

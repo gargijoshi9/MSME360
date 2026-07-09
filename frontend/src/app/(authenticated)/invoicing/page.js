@@ -42,7 +42,7 @@ export default function InvoicingPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">GST Invoicing Ledger</h1>
-            <p className="text-sm text-slate-500 mt-1">Generate and manage invoices directly from customer conversations.</p>
+            <p className="text-sm text-muted mt-1">Generate and manage invoices directly from customer conversations.</p>
           </div>
           <button className="px-4 py-2.5 bg-primary text-white rounded-xl font-semibold flex items-center gap-2">
             <Plus className="h-4 w-4" /> Create Invoice
@@ -52,15 +52,15 @@ export default function InvoicingPage() {
         {/* Dummy Metrics */}
         <div className="grid sm:grid-cols-3 gap-6 mb-8">
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Billed</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Total Billed</span>
             <h3 className="text-2xl font-extrabold mt-1">₹7,12,720</h3>
           </div>
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Outstanding Tax (CGST/SGST)</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Outstanding Tax (CGST/SGST)</span>
             <h3 className="text-2xl font-extrabold text-amber-500 mt-1">₹8,100</h3>
           </div>
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Paid Invoices</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Paid Invoices</span>
             <h3 className="text-2xl font-extrabold text-emerald-500 mt-1">3</h3>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function InvoicingPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-input text-slate-400 font-bold border-b border-border uppercase">
+                <tr className="bg-input text-muted font-bold border-b border-border uppercase">
                   <th className="p-4">Invoice #</th>
                   <th className="p-4">Date</th>
                   <th className="p-4">Customer</th>
@@ -87,11 +87,11 @@ export default function InvoicingPage() {
               <tbody className="divide-y divide-border">
                 {mockInvoices.map((inv) => (
                   <tr key={inv.id} className="hover:bg-input/20">
-                    <td className="p-4 font-bold text-slate-700">{inv.id}</td>
-                    <td className="p-4 text-slate-500">{inv.date}</td>
+                    <td className="p-4 font-bold text-foreground">{inv.id}</td>
+                    <td className="p-4 text-muted">{inv.date}</td>
                     <td className="p-4 font-semibold">{inv.client}</td>
-                    <td className="p-4 font-mono text-slate-500">{inv.gstin}</td>
-                    <td className="p-4 text-right font-medium text-slate-500">₹{inv.tax.toLocaleString()}</td>
+                    <td className="p-4 font-mono text-muted">{inv.gstin}</td>
+                    <td className="p-4 text-right font-medium text-muted">₹{inv.tax.toLocaleString()}</td>
                     <td className="p-4 text-right font-bold">₹{inv.total.toLocaleString()}</td>
                     <td className="p-4">
                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
@@ -101,7 +101,7 @@ export default function InvoicingPage() {
                       </span>
                     </td>
                     <td className="p-4 text-center">
-                      <button className="p-1.5 hover:bg-input border border-border rounded-lg text-slate-400">
+                      <button className="p-1.5 hover:bg-input border border-border rounded-lg text-subtle">
                         <Download className="h-4 w-4" />
                       </button>
                     </td>
@@ -131,18 +131,18 @@ export default function InvoicingPage() {
             GST Invoicing is unlocking soon!
           </h2>
           
-          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 max-w-md mx-auto">
+          <p className="text-sm text-muted leading-relaxed mb-6 max-w-md mx-auto">
             We are currently beta-testing our smart invoice generator. Once live, MSME360 will automatically generate drafts when customers request quotes on WhatsApp or Gmail.
           </p>
 
           {/* Waitlist stats */}
           <div className="grid grid-cols-2 gap-4 py-4 px-6 bg-input border border-border rounded-2xl mb-8 max-w-sm mx-auto">
             <div className="text-center border-r border-border">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Position</span>
+              <span className="block text-[10px] font-bold text-subtle uppercase tracking-wider">Your Position</span>
               <span className="text-xl font-extrabold text-primary">#384</span>
             </div>
             <div className="text-center">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Target Release</span>
+              <span className="block text-[10px] font-bold text-subtle uppercase tracking-wider">Target Release</span>
               <span className="text-xl font-extrabold text-accent">Phase 2</span>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function InvoicingPage() {
           {/* Feedback interaction form */}
           <form onSubmit={handleSubmitFeedback} className="space-y-4">
             <div className="text-left">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
                 What invoice features do you want most?
               </label>
               <div className="flex gap-2">

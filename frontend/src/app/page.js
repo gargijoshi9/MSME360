@@ -15,7 +15,6 @@ import {
   Mail, 
   MessageCircle 
 } from 'lucide-react';
-import DarkVeil from '@/components/DarkVeil/DarkVeil';
 
 export default function LandingPage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -57,7 +56,7 @@ export default function LandingPage() {
               className="p-2 rounded-full hover:bg-input border border-transparent hover:border-border transition-all duration-150"
               aria-label="Toggle theme"
             >
-              {darkMode ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-slate-600" />}
+              {darkMode ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-muted" />}
             </button>
             <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
               Login
@@ -75,16 +74,8 @@ export default function LandingPage() {
       {/* Main Hero */}
       <main className="flex-1">
         <section className="relative overflow-hidden pt-20 pb-16 text-center border-b border-border">
-          {/* Background DarkVeil Canvas */}
-          <div className="absolute inset-0 z-0 opacity-15 dark:opacity-40 transition-opacity duration-300 pointer-events-none">
-            <DarkVeil
-              hueShift={47}
-              speed={0.8}
-              scanlineFrequency={2.5}
-              noiseIntensity={0.03}
-              warpAmount={0.2}
-            />
-          </div>
+          {/* Background gradient */}
+          <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% -10%, color-mix(in srgb, var(--primary) 12%, transparent), transparent)' }} />
 
           <div className="container mx-auto px-6 relative z-10 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-primary text-xs font-semibold mb-6">
@@ -92,11 +83,11 @@ export default function LandingPage() {
               Phase 1 Active: Secured OTP Auth Implemented
             </div>
             
-            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight text-slate-900 dark:text-slate-50">
+            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight text-foreground">
               Bring Order to Your <span className="text-primary">Business Chaos</span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto leading-relaxed font-medium">
+            <p className="text-lg sm:text-xl text-muted mb-8 max-w-2xl mx-auto leading-relaxed font-medium">
               Consolidate your WhatsApp chats and Gmail messages into a single, AI-powered Smart Inbox. Organize customer requests, track transactions, and run your business in one simple place.
             </p>
 
@@ -122,7 +113,7 @@ export default function LandingPage() {
           <div className="container mx-auto px-6">
             <div className="text-center max-w-xl mx-auto mb-16">
               <h2 className="text-3xl font-bold tracking-tight mb-4">Core Active Features</h2>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-muted">
                 Empower your business communications with unified channel feeds and smart filters.
               </p>
             </div>
@@ -133,7 +124,7 @@ export default function LandingPage() {
                   <Inbox className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">Unified Smart Inbox</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-muted leading-relaxed">
                   Route customer queries from WhatsApp Business and Gmail into a single timeline. No more hopping between platforms or losing conversations in spam folders.
                 </p>
               </div>
@@ -143,7 +134,7 @@ export default function LandingPage() {
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors">AI Lead & Query Classification</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-muted leading-relaxed">
                   Automatically sort incoming customer request logs based on intent (Inquiry, Complaint, Lead, Support) and prioritize critical action items.
                 </p>
               </div>
@@ -156,21 +147,21 @@ export default function LandingPage() {
           <div className="container mx-auto px-6">
             <div className="text-center max-w-xl mx-auto mb-16">
               <h2 className="text-3xl font-bold tracking-tight mb-4">Coming Soon in Next Phases</h2>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-muted">
                 A preview of major product extensions unlocking in our roadmap. Join the waitlist inside!
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <div className="p-8 rounded-2xl bg-card border border-border relative overflow-hidden group">
-                <div className="absolute top-4 right-4 bg-slate-100 dark:bg-slate-800 border border-border text-slate-500 text-xs font-semibold px-2.5 py-1 rounded-full">
+                <div className="absolute top-4 right-4 bg-input border border-border text-muted text-xs font-semibold px-2.5 py-1 rounded-full">
                   Phase 2 Beta
                 </div>
-                <div className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl w-fit mb-6">
+                <div className="p-3 bg-input text-muted rounded-xl w-fit mb-6">
                   <ReceiptText className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">GST-Compliant Invoicing</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                <p className="text-muted leading-relaxed mb-4">
                   Automate billing and ledger maintenance directly from customer messaging threads. Draft and send GST-compliant invoices in two clicks.
                 </p>
                 <div className="text-xs text-primary font-semibold flex items-center gap-1.5">
@@ -179,14 +170,14 @@ export default function LandingPage() {
               </div>
 
               <div className="p-8 rounded-2xl bg-card border border-border relative overflow-hidden group">
-                <div className="absolute top-4 right-4 bg-slate-100 dark:bg-slate-800 border border-border text-slate-500 text-xs font-semibold px-2.5 py-1 rounded-full">
+                <div className="absolute top-4 right-4 bg-input border border-border text-muted text-xs font-semibold px-2.5 py-1 rounded-full">
                   Phase 3 Beta
                 </div>
-                <div className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl w-fit mb-6">
+                <div className="p-3 bg-input text-muted rounded-xl w-fit mb-6">
                   <Store className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">B2B Vendor Marketplace</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                <p className="text-muted leading-relaxed mb-4">
                   Connect with verified raw material suppliers and distributors across India. Search by location, product catalog, and rating.
                 </p>
                 <div className="text-xs text-primary font-semibold flex items-center gap-1.5">
@@ -201,19 +192,19 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-border bg-card py-12 transition-colors duration-200">
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2 font-bold text-lg text-slate-700 dark:text-slate-300">
+          <div className="flex items-center gap-2 font-bold text-lg text-foreground">
             <span className="p-1 bg-primary text-white rounded-md">
               <Zap className="h-4 w-4" />
             </span>
             MSME360
           </div>
-          <div className="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-6 text-sm text-muted">
             <Link href="/login" className="hover:text-primary transition-colors">Login</Link>
             <Link href="/signup" className="hover:text-primary transition-colors">Create Account</Link>
             <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
           </div>
-          <div className="text-xs text-slate-400 dark:text-slate-500">
+          <div className="text-xs text-subtle">
             &copy; {new Date().getFullYear()} MSME360. All rights reserved.
           </div>
         </div>

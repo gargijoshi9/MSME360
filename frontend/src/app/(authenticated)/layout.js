@@ -72,7 +72,7 @@ export default function AuthenticatedLayout({ children }) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3">
         <Loader2 className="h-10 w-10 text-primary animate-spin" />
-        <span className="text-sm font-semibold text-slate-500">Checking credentials...</span>
+        <span className="text-sm font-semibold text-muted">Checking credentials...</span>
       </div>
     );
   }
@@ -103,21 +103,21 @@ export default function AuthenticatedLayout({ children }) {
               className="p-2 rounded-full hover:bg-input border border-transparent hover:border-border transition-all duration-150"
               aria-label="Toggle theme"
             >
-              {darkMode ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-slate-600" />}
+              {darkMode ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-muted" />}
             </button>
             
             <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-input border border-border">
               <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase">
                 {user?.ownerName ? user.ownerName.charAt(0) : 'U'}
               </div>
-              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 max-w-[120px] truncate hidden sm:inline">
+              <span className="text-sm font-semibold text-muted max-w-[120px] truncate hidden sm:inline">
                 {user?.ownerName || 'User'}
               </span>
             </div>
 
             <button
               onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all"
+              className="p-2 text-subtle hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all"
               title="Logout"
             >
               <LogOut className="h-5 w-5" />
@@ -140,20 +140,20 @@ export default function AuthenticatedLayout({ children }) {
                   className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium transition-all group ${
                     isActive
                       ? 'bg-primary text-white shadow-md shadow-primary/15'
-                      : 'hover:bg-input hover:text-foreground text-slate-600 dark:text-slate-400'
+                      : 'hover:bg-input hover:text-foreground text-muted'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-primary transition-colors'}`} />
+                    <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-white' : 'text-subtle group-hover:text-primary transition-colors'}`} />
                     <span>{item.name}</span>
                   </div>
                   {item.locked && (
                     <div className="flex items-center gap-1">
-                      <Lock className="h-3 w-3 text-slate-400 dark:text-slate-500" />
+                      <Lock className="h-3 w-3 text-subtle dark:text-subtle" />
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                         isActive 
                           ? 'bg-white/20 text-white' 
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                          : 'bg-input text-muted'
                       }`}>
                         {item.label}
                       </span>
@@ -166,8 +166,8 @@ export default function AuthenticatedLayout({ children }) {
 
           <div className="pt-4 border-t border-border">
             <div className="px-3.5 py-3 rounded-xl bg-input border border-border text-center">
-              <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Company</span>
-              <span className="block text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-subtle mb-0.5">Company</span>
+              <span className="block text-xs font-bold text-foreground truncate">
                 {user?.companyName || 'Not Set'}
               </span>
             </div>
@@ -192,13 +192,13 @@ export default function AuthenticatedLayout({ children }) {
               key={item.name}
               href={item.path}
               className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
-                isActive ? 'text-primary' : 'text-slate-400 dark:text-slate-500'
+                isActive ? 'text-primary' : 'text-subtle'
               }`}
             >
               <div className="relative">
                 <Icon className="h-5 w-5" />
                 {item.locked && (
-                  <span className="absolute -top-1 -right-1 bg-slate-400 text-white rounded-full p-0.5">
+                  <span className="absolute -top-1 -right-1 bg-subtle text-white rounded-full p-0.5">
                     <Lock className="h-2 w-2" />
                   </span>
                 )}

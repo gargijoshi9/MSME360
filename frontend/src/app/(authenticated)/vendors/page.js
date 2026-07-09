@@ -104,7 +104,7 @@ export default function VendorsPage() {
           <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-2.5">
             <Store className="h-7 w-7 text-primary" /> Vendor Directory
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-muted mt-1">
             Connect directly with verified raw material suppliers and wholesalers across India.
           </p>
         </div>
@@ -119,7 +119,7 @@ export default function VendorsPage() {
       {/* Search and Filters */}
       <div className="bg-card border border-border p-4 rounded-2xl flex flex-col sm:flex-row items-center gap-3">
         <div className="relative w-full sm:flex-1">
-          <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-slate-400" />
+          <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-subtle" />
           <input
             type="text"
             placeholder="Search suppliers by name, category, or city..."
@@ -151,10 +151,10 @@ export default function VendorsPage() {
             <div className="p-6 flex-1 space-y-4">
               <div className="flex justify-between items-start gap-2">
                 <div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted">
                     {vendor.category}
                   </span>
-                  <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                  <h3 className="text-sm font-bold text-foreground mt-0.5">
                     {vendor.name}
                   </h3>
                 </div>
@@ -165,19 +165,19 @@ export default function VendorsPage() {
                 )}
               </div>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+              <p className="text-xs text-muted leading-relaxed font-medium">
                 {vendor.desc}
               </p>
 
               <div className="space-y-1 pt-2">
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
-                  <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted">
+                  <MapPin className="h-3.5 w-3.5 text-subtle" />
                   <span>{vendor.location}</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted">
                   <Star className="h-3.5 w-3.5 text-amber-400 fill-current" />
                   <span>
-                    <strong className="text-slate-700 dark:text-slate-300">{vendor.rating}</strong> ({vendor.reviews} reviews)
+                    <strong className="text-foreground">{vendor.rating}</strong> ({vendor.reviews} reviews)
                   </span>
                 </div>
               </div>
@@ -185,15 +185,15 @@ export default function VendorsPage() {
 
             <div className="p-4 border-t border-border bg-input/20 flex items-center justify-between text-xs gap-3">
               <div>
-                <span className="block text-[9px] text-slate-400 font-bold uppercase">Min Order</span>
-                <span className="font-bold text-slate-700 dark:text-slate-300">{vendor.minOrder}</span>
+                <span className="block text-[9px] text-subtle font-bold uppercase">Min Order</span>
+                <span className="font-bold text-foreground">{vendor.minOrder}</span>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => triggerToast(`Contact ${vendor.name}`)}
                   className="px-3 py-2 bg-card hover:bg-input border border-border rounded-lg font-semibold flex items-center gap-1 text-xs transition-all"
                 >
-                  <PhoneCall className="h-3.5 w-3.5 text-slate-500" /> Contact
+                  <PhoneCall className="h-3.5 w-3.5 text-subtle" /> Contact
                 </button>
                 <button
                   onClick={() => triggerToast(`Request RFQ to ${vendor.name}`)}
@@ -209,21 +209,21 @@ export default function VendorsPage() {
 
       {/* Floating Interactive Toast */}
       {showToast && (
-        <div className="fixed bottom-24 right-6 left-6 md:left-auto md:w-96 z-50 bg-slate-900 text-white rounded-2xl p-4 shadow-2xl border border-slate-800 flex items-start gap-3 animate-slideIn">
+        <div className="fixed bottom-24 right-6 left-6 md:left-auto md:w-96 z-50 bg-card text-foreground rounded-2xl p-4 shadow-2xl border border-border flex items-start gap-3 animate-slideIn">
           <div className="p-1.5 bg-primary/25 border border-primary/45 rounded-lg text-primary mt-0.5">
             <Lock className="h-4.5 w-4.5 fill-current text-primary" />
           </div>
           <div className="flex-1 space-y-1">
             <h4 className="text-xs font-bold flex items-center gap-1">
-              Phase 3 Feature <span className="text-[9px] bg-slate-800 text-slate-400 px-1 rounded font-normal">Coming Soon</span>
+              Phase 3 Feature <span className="text-[9px] bg-input text-muted px-1 rounded font-normal">Coming Soon</span>
             </h4>
-            <p className="text-[11px] text-slate-400 leading-relaxed font-medium">
+            <p className="text-[11px] text-muted leading-relaxed font-medium">
               {toastMessage}
             </p>
           </div>
           <button 
             onClick={() => setShowToast(false)}
-            className="text-slate-500 hover:text-slate-300 transition-colors shrink-0"
+            className="text-subtle hover:text-foreground transition-colors shrink-0"
           >
             <X className="h-4 w-4" />
           </button>

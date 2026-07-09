@@ -103,8 +103,8 @@ export default function VerifyOtpPage() {
 
       <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-xl p-8 transition-colors duration-200">
         <h2 className="text-2xl font-bold tracking-tight text-center mb-1">Verify your email</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 text-center mb-6">
-          We sent a 6-digit verification code to <span className="font-semibold text-slate-700 dark:text-slate-300">{email || 'your email'}</span>.
+        <p className="text-sm text-muted text-center mb-6">
+          We sent a 6-digit verification code to <span className="font-semibold text-foreground">{email || 'your email'}</span>.
         </p>
 
         {error && (
@@ -123,7 +123,7 @@ export default function VerifyOtpPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 text-center">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-3 text-center">
               Verification Code
             </label>
             <input
@@ -143,16 +143,16 @@ export default function VerifyOtpPage() {
           <button
             type="submit"
             disabled={loading || !email}
-            className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-slate-400 text-white font-semibold rounded-xl transition-all shadow hover:shadow-primary/20 flex items-center justify-center gap-2 transform hover:-translate-y-[1px]"
+            className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-muted text-white font-semibold rounded-xl transition-all shadow hover:shadow-primary/20 flex items-center justify-center gap-2 transform hover:-translate-y-[1px]"
           >
             {loading ? 'Verifying...' : 'Verify Code'} <ArrowRight className="h-4 w-4" />
           </button>
         </form>
 
         <div className="mt-8 pt-6 border-t border-border flex items-center justify-between text-sm">
-          <span className="text-slate-500 dark:text-slate-400">Didn't receive the code?</span>
+          <span className="text-muted">Didn't receive the code?</span>
           {cooldown > 0 ? (
-            <span className="text-slate-400 dark:text-slate-500 font-medium">
+            <span className="text-subtle font-medium">
               Resend in {cooldown}s
             </span>
           ) : (
@@ -167,7 +167,7 @@ export default function VerifyOtpPage() {
           )}
         </div>
         
-        <div className="text-center mt-6 text-xs text-slate-400">
+        <div className="text-center mt-6 text-xs text-muted">
           <Link href="/signup" className="hover:underline">
             Back to Signup
           </Link>

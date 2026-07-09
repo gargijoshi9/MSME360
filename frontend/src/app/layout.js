@@ -1,14 +1,15 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Geist, Unbounded } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geist = Geist({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const unbounded = Unbounded({
   subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["600", "700"],
 });
 
 export const metadata = {
@@ -19,11 +20,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+  lang="en"
+  className={`${geist.variable} ${unbounded.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
+        {/* Your inline blocker script is perfect—it stops screen flashing completely */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
