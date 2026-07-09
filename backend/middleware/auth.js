@@ -11,12 +11,22 @@ const User = require('../models/User');
  */
 const protect = async (req, res, next) => {
   try {
+    let token;
+    
+    // Check Authorization header
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    } 
+    // Check query parameter (useful for browser file downloads)
+    else if (req.query.token) {
+      token = req.query.token;
+    }
+
+    if (!token) {
       return res.status(401).json({ success: false, message: 'Not authenticated.' });
     }
 
-    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select('_id email emailVerified');

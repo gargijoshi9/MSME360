@@ -1,0 +1,102 @@
+[
+  {
+    "id": "udyam_registration",
+    "category": "Government Registration",
+    "text": "Udyam Registration is mandatory for MSMEs in India. It replaced Udyog Aadhaar. Register at udyamregistration.gov.in using your Aadhaar and PAN. Micro enterprise: investment up to ₹1 crore, turnover up to ₹5 crore. Small: investment up to ₹10 crore, turnover up to ₹50 crore. Medium: investment up to ₹50 crore, turnover up to ₹250 crore. Benefits include priority lending, government tender preference, and subsidy eligibility."
+  },
+  {
+    "id": "mudra_loan",
+    "category": "Finance & Loans",
+    "text": "MUDRA (Micro Units Development & Refinance Agency) loans are for non-farm micro and small enterprises. Three categories: Shishu (up to ₹50,000), Kishore (₹50,001 to ₹5 lakh), Tarun (₹5 lakh to ₹10 lakh). Apply through any bank, NBFC or MFI. No collateral required. Interest rates vary by lender, typically 8-12%. Used for manufacturing, trading, services, and allied agricultural activities."
+  },
+  {
+    "id": "cgtmse_scheme",
+    "category": "Finance & Loans",
+    "text": "CGTMSE (Credit Guarantee Fund Trust for Micro and Small Enterprises) provides credit guarantee to banks lending to MSMEs without collateral. Coverage up to ₹2 crore. Guarantee coverage is 75-85% of credit facility. Annual guarantee fee is 0.37-1.35% depending on loan size and category. Women entrepreneurs get higher coverage. Apply through scheduled commercial banks or RRBs."
+  },
+  {
+    "id": "gst_composition_scheme",
+    "category": "GST",
+    "text": "GST Composition Scheme is for small businesses with turnover up to ₹1.5 crore (₹75 lakh for special category states). Tax rates: Manufacturers and traders 1%, Restaurants 5%, Service providers 6%. Cannot issue tax invoices, cannot claim ITC. File quarterly returns (CMP-08) instead of monthly GSTR-1 and GSTR-3B. Simpler compliance but limited to intra-state supply only."
+  },
+  {
+    "id": "gst_filing_deadlines",
+    "category": "GST",
+    "text": "GST filing deadlines: GSTR-1 (outward supplies) is due on 11th of next month for monthly filers, or 13th after quarter end for quarterly filers (QRMP scheme). GSTR-3B (summary return and payment) is due on 20th of next month. GSTR-9 (annual return) is due by 31st December of next financial year. Late fee is ₹25/day (CGST) + ₹25/day (SGST) = ₹50/day, maximum ₹10,000."
+  },
+  {
+    "id": "itc_input_tax_credit",
+    "category": "GST",
+    "text": "Input Tax Credit (ITC) allows you to reduce GST paid on purchases from GST collected on sales. Conditions: must have a valid tax invoice, goods/services must be received, GST must be paid by supplier (visible in GSTR-2B), and ITC must be claimed within the time limit. ITC on capital goods can be claimed in full in the year of purchase. ITC is not available on personal expenses, employee benefits, or for exempt supplies."
+  },
+  {
+    "id": "e_invoicing",
+    "category": "GST",
+    "text": "E-invoicing is mandatory for businesses with turnover over ₹5 crore (as of 2023). Invoices must be uploaded to the IRP (Invoice Registration Portal) and an IRN (Invoice Reference Number) and QR code must be obtained. Use GSTN's free offline tool or an ASP/GSP. E-invoicing helps auto-populate GSTR-1 and reduces reconciliation errors. Penalty for non-compliance: 100% of tax due."
+  },
+  {
+    "id": "pm_vishwakarma",
+    "category": "Government Schemes",
+    "text": "PM Vishwakarma Scheme supports traditional artisans and craftspeople (18 trades including blacksmith, carpenter, potter, tailor, etc.). Benefits: recognition via PM Vishwakarma certificate, skill training with ₹500/day stipend, collateral-free loan of ₹1 lakh (first tranche) at 5% interest, digital payment incentive of ₹1/transaction (max ₹100/month), and marketing support. Apply at pmvishwakarma.gov.in."
+  },
+  {
+    "id": "working_capital_management",
+    "category": "Business Advice",
+    "text": "Working capital management for MSMEs: Track receivables closely — invoice immediately after delivery, set clear payment terms (Net 15 or Net 30). Use invoice discounting or factoring to get 80-90% of invoice value upfront. Negotiate extended credit with suppliers. Maintain a cash buffer of 2-3 months of operating expenses. Use cash flow forecasting to anticipate shortfalls 30-60 days ahead. Avoid giving credit to clients with payment history of >45 days."
+  },
+  {
+    "id": "digital_payments",
+    "category": "Business Advice",
+    "text": "Accept digital payments to improve cash flow: UPI is free and instant — add your UPI ID to all invoices. QR code payments via PhonePe, GPay, Paytm are widely accepted. For B2B payments, use NEFT/RTGS for amounts over ₹2 lakh. Payment gateways like Razorpay, PayU charge 2% on card payments. GST TDS (Tax Deducted at Source) applies when government entities pay you — ensure you're registered on GST portal."
+  },
+  {
+    "id": "gem_portal",
+    "category": "Government Schemes",
+    "text": "GeM (Government e-Marketplace) is a mandatory portal for government procurement. Register at gem.gov.in to sell products and services to central and state government departments. MSME sellers get preference in bids up to ₹25 lakh. Udyam registration is required. Payment is guaranteed within 10 days of delivery. Avoid middlemen and access government contracts directly. Over ₹2 lakh crore in annual transactions."
+  },
+  {
+    "id": "treds_invoice_discounting",
+    "category": "Finance & Loans",
+    "text": "TReDS (Trade Receivables Discounting System) is an RBI-regulated platform for MSMEs to discount invoices against large companies. Platforms: RXIL, M1Xchange, InvoiceMart. MSMEs can get early payment (within 1-3 days) on invoices due in 30-90 days at competitive rates (8-12% annualized). Requires buyer (corporate) to be registered. Ideal for MSMEs supplying to large corporates, PSUs, or government. Eliminates collection risk."
+  },
+  {
+    "id": "export_documentation",
+    "category": "Business Advice",
+    "text": "MSME export process: Get Importer Exporter Code (IEC) from DGFT — free, one-time. Register on DGFT portal and ICEGATE (customs). Get Letter of Credit or advance payment for new buyers. Key documents: Invoice, Packing List, Shipping Bill, Bill of Lading/Airway Bill, Certificate of Origin. GST refund (IGST paid on exports is refundable). Explore MEIS/RoDTEP schemes for export incentives. ECGC insurance protects against buyer default."
+  },
+  {
+    "id": "gst_hsn_codes",
+    "category": "GST",
+    "text": "HSN (Harmonized System of Nomenclature) codes must be mentioned on GST invoices. Businesses with turnover up to ₹5 crore use 4-digit HSN; above ₹5 crore use 6-digit. SAC (Services Accounting Code) is used for services. Common HSN codes: Software services SAC 998314, Consulting SAC 998311, Textile goods 5208, Electronic items 8471, Food products 1901. Wrong HSN code attracts ₹50,000 penalty per invoice."
+  },
+  {
+    "id": "msme_delayed_payment",
+    "category": "Legal Rights",
+    "text": "Under the MSMED Act 2006, buyers must pay MSMEs within 45 days of acceptance or deemed acceptance. If delayed, compound interest at 3 times the RBI bank rate is payable. File complaints on MSME Samadhaan portal (samadhaan.msme.gov.in). The MSEFC (Micro and Small Enterprises Facilitation Council) resolves disputes. Section 43B(h) of Income Tax Act: buyers cannot claim deduction for MSME payments delayed beyond 45 days."
+  },
+  {
+    "id": "pricing_strategy",
+    "category": "Business Advice",
+    "text": "Pricing for MSMEs: Calculate full cost (materials + labour + overhead + GST) before setting price. Add at least 20-25% gross margin for sustainability. Review pricing every 6 months as input costs change. For B2B: offer volume discounts (5-10%) for large orders but protect margins. For services: value-based pricing (charge based on value delivered) > cost-plus pricing. Don't compete purely on price — focus on reliability, quality, and relationship. Publish a rate card to avoid negotiation fatigue."
+  },
+  {
+    "id": "psb_loans_59_minutes",
+    "category": "Finance & Loans",
+    "text": "PSB Loans in 59 Minutes is a government initiative for fast MSME credit approval. Apply at psbloansin59minutes.com for loans from ₹1 lakh to ₹5 crore. In-principle approval in under 59 minutes. Requires: GSTN, IT returns, bank statement (6 months), Udyam registration. Participating banks: SBI, PNB, Bank of Baroda, SIDBI, and others. After in-principle approval, bank branch processes the final disbursement."
+  },
+  {
+    "id": "invoice_best_practices",
+    "category": "Business Advice",
+    "text": "Invoice best practices for MSMEs: Number invoices sequentially (INV-2024-0001). Always include GSTIN, HSN/SAC code, and tax breakup as required by GST law. Set Net 15 or Net 30 payment terms clearly. Add late payment clause (1.5-2% per month on overdue). Send invoice via WhatsApp/email immediately after delivery — don't wait for month-end. Follow up on day 1 of due date. Use accounting software to track aging. Offer 2% early payment discount for payment within 7 days."
+  },
+  {
+    "id": "cash_flow_forecast",
+    "category": "Business Advice",
+    "text": "Cash flow forecasting for MSMEs: List all expected income (invoices due) and expenses (rent, salaries, supplier payments) for the next 30-60 days. Identify cash gaps. Typical MSME cash cycle: sale on Day 0, invoice raised Day 1-2, payment received Day 30-45, supplies paid Day 15-30. To improve cash flow: invoice early, collect aggressively, negotiate supplier credit. Minimum cash buffer should be 2 months of fixed costs. Use daily bank reconciliation."
+  },
+  {
+    "id": "startup_india_recognition",
+    "category": "Government Schemes",
+    "text": "Startup India recognition gives tax benefits and easier compliance. Apply at startupindia.gov.in if your entity is less than 10 years old, turnover under ₹100 crore, and working on innovation. Benefits: 3-year income tax exemption, capital gains exemption, easier winding up process, self-certification for 6 labour and 3 environment laws. DPIIT recognition also helps with funding from SEBI-registered alternative investment funds."
+  }
+]

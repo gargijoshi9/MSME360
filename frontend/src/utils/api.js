@@ -50,11 +50,19 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  // Signup
-  async signup({ companyName, ownerName, email, password }) {
+  // Signup — passes all business registration fields the backend already accepts
+  async signup({
+    email, password,
+    companyName, ownerName, phone, businessType,
+    city, address, gstin, pan, currency, taxRate,
+  }) {
     return request('/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ companyName, ownerName, email, password }),
+      body: JSON.stringify({
+        email, password,
+        companyName, ownerName, phone, businessType,
+        city, address, gstin, pan, currency, taxRate,
+      }),
     });
   },
 
@@ -81,4 +89,72 @@ export const api = {
       body: JSON.stringify({ email, password }),
     });
   },
+
+  // ── Chat ────────────────────────────────────────────────────────────────
+  // Send a text message
+  async chat({ message, history = [] }) {
+    return request('/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, history: JSON.stringify(history) }),
+    });
+  },
+
+  // Send a message with a file attachment (multipart)
+  async chatWithFile({ message, file, history = [] }) {
+    const formData = new FormData();
+    if (message) formData.append('message', message);
+    formData.append('file', file);
+    formData.append('history', JSON.stringify(history));
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('msme360_token') : null;
+    const response = await fetch(`${BASE_URL}/chat`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+
+    let data;
+    try { data = await response.json(); } catch { data = { success: false, message: 'Invalid response.' }; }
+    if (!response.ok) throw new ApiError(response.status, data.message || 'Chat error.', data);
+    return data;
+  },
+
+  // Confirm and save an invoice from chat
+  async confirmInvoice({ draftData }) {
+    return request('/invoices/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ draftData }),
+    });
+  },
+
+  // ── Invoices ─────────────────────────────────────────────────────────────
+  async getInvoices({ status, page = 1, limit = 20 } = {}) {
+    const params = new URLSearchParams({ page, limit });
+    if (status) params.append('status', status);
+    return request(`/invoices?${params}`);
+  },
+
+  async getInvoice(id) {
+    return request(`/invoices/${id}`);
+  },
+
+  async updateInvoiceStatus(id, { status, amountPaid }) {
+    return request(`/invoices/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, amountPaid }),
+    });
+  },
+
+  async saveScannedInvoice({ structured, rawText }) {
+    return request('/invoices/from-scan', {
+      method: 'POST',
+      body: JSON.stringify({ structured, rawText }),
+    });
+  },
+
+  // ── Finances ──────────────────────────────────────────────────────────────
+  async getFinanceOverview()  { return request('/finances/overview');    },
+  async getGstSummary()       { return request('/finances/gst-summary'); },
+  async getCashFlow()         { return request('/finances/cash-flow');   },
+  async getAging()            { return request('/finances/aging');       },
 };

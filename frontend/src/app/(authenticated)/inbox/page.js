@@ -1,422 +1,495 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Inbox as InboxIcon, 
-  Search, 
-  MessageCircle, 
-  Mail, 
-  Send, 
-  User, 
-  Sparkles, 
-  CornerDownLeft, 
-  Filter, 
-  Check, 
-  ChevronRight,
-  AlertCircle
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { api } from '@/utils/api';
+import {
+  Send, Paperclip, Bot, User, FileText, CheckCircle2,
+  AlertTriangle, Download, X, Loader2, Sparkles,
+  Receipt, TrendingUp, ChevronRight, RefreshCw,
 } from 'lucide-react';
 
-export default function InboxPage() {
-  const [filterChannel, setFilterChannel] = useState('all'); // 'all', 'whatsapp', 'gmail'
-  const [filterCategory, setFilterCategory] = useState('all'); // 'all', 'Lead', 'Inquiry', 'Complaint', 'Support'
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Master chat threads state
-  const [threads, setThreads] = useState([
-    {
-      id: 1,
-      name: 'Karan Johar',
-      contact: '+91 98765 43210',
-      platform: 'whatsapp',
-      summary: 'Wants quote for 200 custom brass valves.',
-      category: 'Lead',
-      priority: 'high',
-      time: '3m ago',
-      unread: true,
-      aiDraft: 'Hi Karan, thank you for reaching out to MSME360. We can manufacture and ship 200 units of custom brass valves to your facility. Our current lead time is 7 working days, and we will email a detailed PDF quotation to your contact. Please confirm if you require standard or express shipping.',
-      messages: [
-        { id: 101, sender: 'customer', text: 'Hello, are you the manager of MSME360 Manufacturing?', time: '10:14 AM' },
-        { id: 102, sender: 'agent', text: 'Yes, welcome! How can I help you today?', time: '10:15 AM' },
-        { id: 103, sender: 'customer', text: 'Need quote for 200 units of custom brass valves. Standard packing.', time: '10:16 AM' },
-      ]
-    },
-    {
-      id: 2,
-      name: 'Tata Automotive Purchasing',
-      contact: 'purchasing@tataautomotive.com',
-      platform: 'gmail',
-      summary: 'Requesting technical sheets for custom clearance of shipment #5591A.',
-      category: 'Inquiry',
-      priority: 'high',
-      time: '24m ago',
-      unread: true,
-      aiDraft: 'Dear Purchasing Team, regarding shipment #5591A, we have uploaded the requested technical sheets to our shared drive. You can download the certificates directly or find them attached to our follow-up email. Let us know if customs requires additional certification.',
-      messages: [
-        { id: 201, sender: 'customer', text: 'We require technical sheets for shipment #5591A before clearing customs today. The cargo is stuck at Port B.', time: '09:50 AM' },
-      ]
-    },
-    {
-      id: 3,
-      name: 'Ramesh Exports',
-      contact: '+91 88877 66554',
-      platform: 'whatsapp',
-      summary: 'Catalog received confirmation.',
-      category: 'Support',
-      priority: 'low',
-      time: '1h ago',
-      unread: false,
-      aiDraft: 'Glad you received the catalog, Ramesh. Let us know if you need any fabric samples sent over.',
-      messages: [
-        { id: 301, sender: 'agent', text: 'Sent you the new summer catalog. Let us know if you have any questions.', time: 'Yesterday' },
-        { id: 302, sender: 'customer', text: 'Thank you for the catalog. I will review and let you know.', time: 'Yesterday' },
-      ]
-    },
-    {
-      id: 4,
-      name: 'Sharma Textiles Billing',
-      contact: 'billing@sharmatextiles.co',
-      platform: 'gmail',
-      summary: 'Complaining about double shipping fee charge on invoice #2024-889.',
-      category: 'Complaint',
-      priority: 'medium',
-      time: '3h ago',
-      unread: false,
-      aiDraft: 'Dear Sharma Textiles, we apologize for the oversight on invoice #2024-889. We have verified the shipping fees and noticed a system glitch. A credit note for the double charge has been processed and will reflect in your ledger shortly.',
-      messages: [
-        { id: 401, sender: 'customer', text: 'Invoice #2024-889 has double charge on shipping fees. Please rectify.', time: '07:12 AM' },
-      ]
-    },
-    {
-      id: 5,
-      name: 'Rajesh Kumar (Surat Textiles)',
-      contact: '+91 99001 12233',
-      platform: 'whatsapp',
-      summary: 'Sunday operating hours query.',
-      category: 'Inquiry',
-      priority: 'low',
-      time: '5h ago',
-      unread: false,
-      aiDraft: 'Hi Rajesh, our Surat warehouse is closed on Sundays. However, we open early on Monday mornings at 8:00 AM. Let us know if we should pre-pack your order.',
-      messages: [
-        { id: 501, sender: 'customer', text: 'Are you open on Sundays? Need to pick up stock.', time: '05:08 AM' },
-      ]
-    }
-  ]);
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-  const [activeThreadId, setActiveThreadId] = useState(1);
-  const [replyText, setReplyText] = useState('');
+const WELCOME_MSG = {
+  id:   'welcome',
+  role: 'assistant',
+  type: 'chat',
+  text: `👋 **Namaste! I'm MSME Saathi** — your AI business assistant.
 
-  // Selected active thread
-  const activeThread = threads.find((t) => t.id === activeThreadId) || threads[0];
+I can help you with:
+- 🧾 **Create invoices** — *"Bill Ravi ₹5,000 for consulting"*
+- 🔍 **Find past invoices** — *"Show me Sharma's invoice from last month"*
+- 📊 **Finance queries** — *"What's my pending amount this quarter?"*
+- 💡 **Business advice** — *"Tell me about MUDRA loan eligibility"*
+- 📷 **Scan invoices** — upload any bill image to extract details
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!replyText.trim()) return;
+Aap kya jaanna chahte hain? What would you like to do?`,
+};
 
-    // Add message to active thread
-    const now = new Date();
-    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+// ── Markdown-lite renderer ─────────────────────────────────────────────────
+function renderMarkdown(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`(.*?)`/g, '<code class="bg-input px-1 rounded text-xs font-mono">$1</code>')
+    .replace(/\n/g, '<br/>');
+}
 
-    setThreads((prevThreads) => 
-      prevThreads.map((thread) => {
-        if (thread.id === activeThreadId) {
-          return {
-            ...thread,
-            unread: false,
-            messages: [
-              ...thread.messages,
-              {
-                id: Date.now(),
-                sender: 'agent',
-                text: replyText.trim(),
-                time: timeString
-              }
-            ]
-          };
-        }
-        return thread;
-      })
+// ── Message bubble ─────────────────────────────────────────────────────────
+
+function MessageBubble({ msg, onConfirmInvoice, onSaveOcr }) {
+  const isUser = msg.role === 'user';
+
+  if (isUser) {
+    return (
+      <div className="flex justify-end gap-2 items-end">
+        <div className="max-w-[80%] bg-primary text-white rounded-2xl rounded-br-md px-4 py-2.5 text-sm leading-relaxed">
+          {msg.file && (
+            <div className="flex items-center gap-1.5 text-white/80 text-xs mb-1.5">
+              <Paperclip className="h-3 w-3" /> {msg.file}
+            </div>
+          )}
+          {msg.text}
+        </div>
+        <div className="h-7 w-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+          <User className="h-4 w-4 text-primary" />
+        </div>
+      </div>
     );
-
-    setReplyText('');
-  };
-
-  const useAiDraft = () => {
-    if (activeThread?.aiDraft) {
-      setReplyText(activeThread.aiDraft);
-    }
-  };
-
-  const selectThread = (id) => {
-    setActiveThreadId(id);
-    // Mark as read
-    setThreads((prevThreads) => 
-      prevThreads.map((thread) => {
-        if (thread.id === id) {
-          return { ...thread, unread: false };
-        }
-        return thread;
-      })
-    );
-  };
-
-  // Filters logic
-  const filteredThreads = threads.filter((t) => {
-    const matchesChannel = 
-      filterChannel === 'all' || 
-      t.platform === filterChannel;
-
-    const matchesCategory = 
-      filterCategory === 'all' || 
-      t.category === filterCategory;
-
-    const matchesSearch = 
-      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.contact.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesChannel && matchesCategory && matchesSearch;
-  });
+  }
 
   return (
-    <div className="h-[calc(100vh-140px)] flex flex-col md:flex-row border border-border bg-card rounded-2xl overflow-hidden animate-fadeIn">
-      {/* 1. Sidebar - Threads List */}
-      <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-border flex flex-col h-1/2 md:h-full">
-        {/* Search */}
-        <div className="p-4 border-b border-border flex items-center gap-2">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-subtle" />
-            <input
-              type="text"
-              placeholder="Search conversations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-border bg-input outline-none focus:border-primary transition-all"
-            />
+    <div className="flex gap-2 items-end">
+      <div className="h-7 w-7 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+        <Bot className="h-4 w-4 text-accent" />
+      </div>
+      <div className="max-w-[85%] space-y-2">
+
+        {/* Regular chat */}
+        {(msg.type === 'chat' || !msg.type) && (
+          <div className="bg-card border border-border rounded-2xl rounded-bl-md px-4 py-2.5 text-sm leading-relaxed">
+            <div dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text || '') }} />
           </div>
+        )}
+
+        {/* Invoice preview card */}
+        {msg.type === 'invoice_preview' && msg.invoicePreview && (
+          <InvoicePreviewCard
+            preview={msg.invoicePreview}
+            draftData={msg.draftData}
+            onConfirm={onConfirmInvoice}
+            responseText={msg.text}
+          />
+        )}
+
+        {/* OCR result card */}
+        {msg.type === 'ocr_result' && msg.structured && (
+          <OcrResultCard
+            structured={msg.structured}
+            rawText={msg.rawText}
+            suggestion={msg.suggestion}
+            onSave={onSaveOcr}
+          />
+        )}
+
+        {/* Error */}
+        {msg.type === 'error' && (
+          <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 dark:bg-red-950/20 dark:text-red-400 rounded-2xl px-4 py-2.5 border border-red-200 dark:border-red-800/30">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            {msg.text}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Invoice preview card ───────────────────────────────────────────────────
+
+function InvoicePreviewCard({ preview, draftData, onConfirm, responseText }) {
+  const [confirming, setConfirming] = useState(false);
+  const [confirmed, setConfirmed]   = useState(false);
+  const [pdfUrl, setPdfUrl]         = useState(null);
+
+  const handleConfirm = async () => {
+    setConfirming(true);
+    try {
+      const res = await api.confirmInvoice({ draftData });
+      setConfirmed(true);
+      setPdfUrl(res.pdfUrl);
+      onConfirm && onConfirm(res.invoice);
+    } catch (err) {
+      alert(err.message || 'Failed to create invoice.');
+    } finally {
+      setConfirming(false);
+    }
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm max-w-sm">
+      {/* Header */}
+      <div className="flex items-center gap-2 px-4 py-3 bg-primary/5 border-b border-border">
+        <Receipt className="h-4 w-4 text-primary" />
+        <span className="text-sm font-bold text-primary">Invoice Draft</span>
+        <span className="ml-auto text-xs text-muted font-mono">{preview.invoiceNumber}</span>
+      </div>
+
+      {responseText && (
+        <p className="px-4 pt-3 text-sm text-muted"
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(responseText) }} />
+      )}
+
+      {/* Details */}
+      <div className="px-4 py-3 space-y-2">
+        <div className="flex justify-between text-sm">
+          <span className="text-muted">Client</span>
+          <span className="font-semibold">{preview.clientName}</span>
         </div>
-
-        {/* Channels/Categories Filter Toolbar */}
-        <div className="p-3 bg-input/40 border-b border-border flex flex-col gap-2 shrink-0">
-          {/* Channel Filters */}
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setFilterChannel('all')}
-              className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border ${
-                filterChannel === 'all' 
-                  ? 'bg-primary text-white border-primary' 
-                  : 'bg-card text-muted border-border hover:bg-input'
-              }`}
-            >
-              All Channels
-            </button>
-            <button
-              onClick={() => setFilterChannel('whatsapp')}
-              className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border flex items-center gap-1 ${
-                filterChannel === 'whatsapp' 
-                  ? 'bg-emerald-500 text-white border-emerald-500' 
-                  : 'bg-card text-muted border-border hover:bg-input'
-              }`}
-            >
-              <MessageCircle className="h-3 w-3" /> WhatsApp
-            </button>
-            <button
-              onClick={() => setFilterChannel('gmail')}
-              className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border flex items-center gap-1 ${
-                filterChannel === 'gmail' 
-                  ? 'bg-blue-500 text-white border-blue-500' 
-                  : 'bg-card text-muted border-border hover:bg-input'
-              }`}
-            >
-              <Mail className="h-3 w-3" /> Gmail
-            </button>
+        {preview.lineItems?.slice(0, 3).map((item, i) => (
+          <div key={i} className="flex justify-between text-xs text-muted">
+            <span className="truncate max-w-[160px]">{item.description}</span>
+            <span>₹{item.total?.toFixed(2)}</span>
           </div>
+        ))}
+        {preview.lineItems?.length > 3 && (
+          <p className="text-xs text-subtle">+{preview.lineItems.length - 3} more items</p>
+        )}
 
-          {/* Category Filters */}
-          <div className="flex flex-wrap items-center gap-1">
-            {['all', 'Lead', 'Inquiry', 'Complaint', 'Support'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setFilterCategory(cat)}
-                className={`px-2 py-0.5 text-[9px] font-semibold rounded-md border ${
-                  filterCategory === cat
-                    ? 'bg-foreground text-background border-foreground dark:bg-foreground dark:text-background'
-                    : 'bg-card text-muted border-border hover:bg-input'
-                }`}
-              >
-                {cat === 'all' ? 'All Intents' : cat}
-              </button>
-            ))}
+        <div className="border-t border-border pt-2 space-y-1">
+          <div className="flex justify-between text-xs text-muted">
+            <span>Subtotal</span><span>₹{preview.subtotal?.toFixed(2)}</span>
           </div>
-        </div>
-
-        {/* Threads list */}
-        <div className="flex-1 overflow-y-auto divide-y divide-border">
-          {filteredThreads.length === 0 ? (
-            <div className="p-8 text-center text-subtle flex flex-col items-center justify-center gap-2">
-              <InboxIcon className="h-8 w-8 opacity-50" />
-              <span className="text-xs font-semibold">No messages found</span>
-            </div>
-          ) : (
-            filteredThreads.map((thread) => (
-              <button
-                key={thread.id}
-                onClick={() => selectThread(thread.id)}
-                className={`w-full text-left p-4 hover:bg-input/20 transition-all flex flex-col gap-1.5 ${
-                  thread.id === activeThreadId ? 'bg-input/40 border-l-4 border-primary' : ''
-                }`}
-              >
-                <div className="flex justify-between items-center w-full">
-                  <span className={`text-xs font-bold truncate ${thread.unread ? 'text-primary' : ''}`}>
-                    {thread.name}
-                  </span>
-                  <span className="text-[10px] text-subtle shrink-0">{thread.time}</span>
-                </div>
-                
-                <div className="text-[11px] text-muted truncate w-full">
-                  {thread.summary}
-                </div>
-
-                <div className="flex items-center justify-between w-full mt-1.5">
-                  <div className="flex items-center gap-1.5 text-[9px] font-semibold text-subtle">
-                    {thread.platform === 'whatsapp' ? (
-                      <MessageCircle className="h-3.5 w-3.5 text-emerald-500 fill-current" />
-                    ) : (
-                      <Mail className="h-3.5 w-3.5 text-blue-500" />
-                    )}
-                    <span>{thread.platform === 'whatsapp' ? 'WhatsApp' : 'Gmail'}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                      thread.category === 'Lead' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' :
-                      thread.category === 'Inquiry' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600' :
-                      thread.category === 'Complaint' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600' :
-                      'bg-input text-muted'
-                    }`}>
-                      {thread.category}
-                    </span>
-                    {thread.priority === 'high' && (
-                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded uppercase bg-red-100 dark:bg-red-950/20 text-red-500 border border-red-200 dark:border-red-900/20">
-                        High
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            ))
-          )}
+          <div className="flex justify-between text-xs text-muted">
+            <span>GST</span><span>₹{preview.totalGST?.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-sm font-bold text-foreground">
+            <span>Total</span><span>₹{preview.grandTotal?.toFixed(2)}</span>
+          </div>
         </div>
       </div>
 
-      {/* 2. Main Chat Panel */}
-      <div className="flex-1 flex flex-col h-1/2 md:h-full bg-input/10">
-        {/* Header */}
-        <div className="p-4 border-b border-border bg-card flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
-              {activeThread.name.charAt(0)}
+      {/* Actions */}
+      <div className="px-4 pb-4">
+        {confirmed ? (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-emerald-600 font-semibold">
+              <CheckCircle2 className="h-4 w-4" /> Invoice created!
             </div>
-            <div>
-              <h3 className="text-xs font-bold">{activeThread.name}</h3>
-              <p className="text-[10px] text-muted font-medium">{activeThread.contact}</p>
-            </div>
+            {pdfUrl && (
+              <a
+                href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}${pdfUrl}?token=${typeof window !== 'undefined' ? localStorage.getItem('msme360_token') : ''}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 text-sm text-primary hover:underline font-semibold"
+              >
+                <Download className="h-4 w-4" /> Download PDF
+              </a>
+            )}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold px-2 py-0.5 bg-input text-muted rounded border border-border">
-              Intent: {activeThread.category}
-            </span>
+        ) : (
+          <button
+            onClick={handleConfirm}
+            disabled={confirming}
+            className="w-full py-2.5 bg-primary hover:bg-primary-hover disabled:bg-muted text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-all"
+          >
+            {confirming ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+            {confirming ? 'Generating PDF...' : 'Confirm & Generate PDF'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── OCR result card ────────────────────────────────────────────────────────
+
+function OcrResultCard({ structured, rawText, suggestion, onSave }) {
+  const [saving, setSaving] = useState(false);
+  const [saved,  setSaved]  = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await api.saveScannedInvoice({ structured, rawText });
+      setSaved(true);
+      onSave && onSave();
+    } catch (err) {
+      alert(err.message || 'Failed to save invoice.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (structured?.parseError) {
+    return (
+      <div className="bg-card border border-border rounded-2xl px-4 py-3 text-sm text-muted">
+        OCR completed but could not extract structured data. Raw text available for review.
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm max-w-sm">
+      <div className="flex items-center gap-2 px-4 py-3 bg-accent/5 border-b border-border">
+        <FileText className="h-4 w-4 text-accent" />
+        <span className="text-sm font-bold text-accent">Scanned Invoice</span>
+      </div>
+
+      <div className="px-4 py-3 space-y-1.5 text-xs">
+        {structured.vendorName   && <div className="flex justify-between"><span className="text-muted">Vendor</span><span className="font-semibold">{structured.vendorName}</span></div>}
+        {structured.invoiceNumber && <div className="flex justify-between"><span className="text-muted">Invoice #</span><span className="font-mono">{structured.invoiceNumber}</span></div>}
+        {structured.invoiceDate  && <div className="flex justify-between"><span className="text-muted">Date</span><span>{new Date(structured.invoiceDate).toLocaleDateString('en-IN')}</span></div>}
+        {structured.grandTotal   && <div className="flex justify-between text-sm font-bold text-foreground border-t border-border pt-1.5 mt-1.5"><span>Total</span><span>₹{structured.grandTotal}</span></div>}
+      </div>
+
+      {suggestion && <p className="px-4 pb-2 text-xs text-muted">{suggestion}</p>}
+
+      <div className="px-4 pb-4">
+        {saved ? (
+          <div className="flex items-center gap-2 text-sm text-emerald-600 font-semibold">
+            <CheckCircle2 className="h-4 w-4" /> Saved to your records!
+          </div>
+        ) : (
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full py-2.5 bg-accent hover:bg-accent-hover disabled:bg-muted text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-all"
+          >
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+            {saving ? 'Saving...' : 'Save to Records'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Main page ──────────────────────────────────────────────────────────────
+
+export default function InboxPage() {
+  const [messages,  setMessages]  = useState([WELCOME_MSG]);
+  const [input,     setInput]     = useState('');
+  const [loading,   setLoading]   = useState(false);
+  const [dragOver,  setDragOver]  = useState(false);
+  const bottomRef   = useRef(null);
+  const inputRef    = useRef(null);
+  const fileRef     = useRef(null);
+
+  // Build Gemini-format history from messages (last 10 turns)
+  const buildHistory = useCallback(() => {
+    return messages
+      .filter(m => m.id !== 'welcome' && (m.role === 'user' || m.role === 'assistant') && m.type !== 'invoice_preview' && m.type !== 'ocr_result')
+      .slice(-10)
+      .map(m => ({
+        role:  m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.text || '' }],
+      }));
+  }, [messages]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const addMessage = (msg) =>
+    setMessages(prev => [...prev, { id: Date.now() + Math.random(), ...msg }]);
+
+  const sendText = async (text) => {
+    if (!text.trim() || loading) return;
+    setInput('');
+
+    addMessage({ role: 'user', type: 'text', text });
+    setLoading(true);
+
+    try {
+      const res = await api.chat({ message: text, history: buildHistory() });
+
+      addMessage({
+        role:           'assistant',
+        type:           res.type || 'chat',
+        text:           res.response || res.message || '',
+        invoicePreview: res.invoicePreview,
+        draftData:      res.draftData,
+      });
+    } catch (err) {
+      addMessage({ role: 'assistant', type: 'error', text: err.message || 'Something went wrong. Please try again.' });
+    } finally {
+      setLoading(false);
+      inputRef.current?.focus();
+    }
+  };
+
+  const sendFile = async (file) => {
+    if (!file || loading) return;
+    setLoading(true);
+
+    addMessage({ role: 'user', type: 'text', text: `📎 ${file.name}`, file: file.name });
+
+    try {
+      const res = await api.chatWithFile({ file, history: buildHistory() });
+      addMessage({
+        role:       'assistant',
+        type:       res.type || 'chat',
+        text:       res.message || res.response || '',
+        structured: res.structured,
+        rawText:    res.rawText,
+        suggestion: res.suggestion,
+      });
+    } catch (err) {
+      addMessage({ role: 'assistant', type: 'error', text: err.message || 'Failed to process file.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendText(input);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) sendFile(file);
+  };
+
+  const QUICK_PROMPTS = [
+    { label: '🧾 Create Invoice', text: 'Create an invoice for a client' },
+    { label: '💰 Pending Amount', text: 'What is my total pending amount?' },
+    { label: '📋 MUDRA Loan', text: 'Explain MUDRA loan eligibility and process' },
+    { label: '📊 GST Due', text: 'How much GST do I owe this month?' },
+  ];
+
+  return (
+    <div
+      className="h-[calc(100vh-130px)] flex flex-col bg-background relative"
+      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={handleDrop}
+    >
+      {/* Drag overlay */}
+      {dragOver && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-primary/10 border-2 border-dashed border-primary rounded-2xl backdrop-blur-sm">
+          <div className="text-center">
+            <Paperclip className="h-12 w-12 text-primary mx-auto mb-3" />
+            <p className="text-primary font-semibold text-lg">Drop invoice to scan with OCR</p>
           </div>
         </div>
+      )}
 
-        {/* Messages list */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {activeThread.messages.map((msg) => {
-            const isAgent = msg.sender === 'agent';
-            return (
-              <div key={msg.id} className={`flex ${isAgent ? 'justify-end' : 'justify-start'} animate-scaleIn`}>
-                <div className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${
-                  isAgent 
-                    ? 'bg-primary text-white rounded-tr-none' 
-                    : 'bg-card border border-border text-foreground rounded-tl-none'
-                }`}>
-                  <p className="text-xs leading-relaxed font-medium">{msg.text}</p>
-                  <span className={`block text-[9px] mt-1 text-right ${isAgent ? 'text-white/70' : 'text-subtle'}`}>
-                    {msg.time}
-                  </span>
-                </div>
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-border bg-card/80 backdrop-blur-sm">
+        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center border border-border">
+          <Sparkles className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h1 className="font-bold text-base text-foreground">MSME Saathi</h1>
+          <p className="text-xs text-muted">AI Business Assistant • RAG-powered</p>
+        </div>
+        <div className="ml-auto flex items-center gap-1.5">
+          <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
+          <span className="text-xs text-muted font-medium">Online</span>
+        </div>
+      </div>
+
+      {/* Quick prompts (only when just welcome message) */}
+      {messages.length === 1 && (
+        <div className="px-5 pt-4 grid grid-cols-2 gap-2">
+          {QUICK_PROMPTS.map((qp) => (
+            <button
+              key={qp.label}
+              onClick={() => sendText(qp.text)}
+              className="flex items-center gap-2 px-3 py-2.5 bg-card border border-border rounded-xl text-sm text-muted hover:text-foreground hover:border-primary/30 hover:bg-primary/5 transition-all text-left group"
+            >
+              <span className="flex-1">{qp.label}</span>
+              <ChevronRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+        {messages.map((msg) => (
+          <MessageBubble
+            key={msg.id}
+            msg={msg}
+            onConfirmInvoice={() => {}}
+            onSaveOcr={() => {}}
+          />
+        ))}
+
+        {/* Typing indicator */}
+        {loading && (
+          <div className="flex gap-2 items-end">
+            <div className="h-7 w-7 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+              <Bot className="h-4 w-4 text-accent" />
+            </div>
+            <div className="bg-card border border-border rounded-2xl rounded-bl-md px-4 py-3">
+              <div className="flex gap-1.5 items-center">
+                {[0, 0.15, 0.3].map((delay, i) => (
+                  <div
+                    key={i}
+                    className="h-2 w-2 bg-muted rounded-full animate-bounce"
+                    style={{ animationDelay: `${delay}s` }}
+                  />
+                ))}
               </div>
-            );
-          })}
-        </div>
-
-        {/* Input box */}
-        <div className="p-4 border-t border-border bg-card">
-          <form onSubmit={handleSendMessage} className="flex gap-2">
-            <input
-              type="text"
-              placeholder={`Reply to ${activeThread.name}...`}
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-xl border border-border bg-input outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary text-xs transition-all"
-            />
-            <button
-              type="submit"
-              className="px-4 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl transition-all shadow hover:shadow-primary/20 flex items-center justify-center shrink-0"
-            >
-              <Send className="h-4 w-4" />
-            </button>
-          </form>
-        </div>
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
       </div>
 
-      {/* 3. AI Copilot Panel (Right Sidebar) */}
-      <div className="w-full md:w-80 border-t md:border-t-0 md:border-l border-border bg-card p-6 flex flex-col gap-6 shrink-0 h-fit md:h-full overflow-y-auto">
-        <div className="flex items-center gap-2 text-primary font-bold text-sm">
-          <Sparkles className="h-5 w-5 fill-current" />
-          <span>AI Copilot Analysis</span>
-        </div>
+      {/* Input area */}
+      <div className="px-5 py-4 border-t border-border bg-card/80 backdrop-blur-sm">
+        <div className="flex items-end gap-2">
+          {/* File upload */}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*,.pdf"
+            className="hidden"
+            onChange={(e) => { if (e.target.files?.[0]) sendFile(e.target.files[0]); e.target.value = ''; }}
+          />
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={loading}
+            title="Upload invoice to scan"
+            className="p-2.5 text-subtle hover:text-primary hover:bg-primary/10 rounded-xl border border-border transition-all disabled:opacity-50 shrink-0"
+          >
+            <Paperclip className="h-5 w-5" />
+          </button>
 
-        <div className="space-y-4">
-          <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Intent Tagging</h4>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-500/10 text-emerald-500 rounded-lg border border-emerald-500/20 uppercase">
-                {activeThread.category}
-              </span>
-              <span className="text-xs font-semibold px-2.5 py-1 bg-red-500/10 text-red-500 rounded-lg border border-red-500/20 uppercase">
-                {activeThread.priority} Priority
-              </span>
-            </div>
+          {/* Text input */}
+          <div className="flex-1 relative">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type a message or drop an invoice image here…"
+              rows={1}
+              disabled={loading}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-input focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm resize-none disabled:opacity-60 max-h-32 overflow-y-auto"
+              style={{ minHeight: '42px' }}
+            />
           </div>
 
-          <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5">Executive Summary</h4>
-            <div className="p-3 bg-input border border-border rounded-xl text-xs text-muted leading-relaxed font-medium">
-              {activeThread.summary}
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted">Suggested Smart Reply</h4>
-              <button 
-                onClick={useAiDraft}
-                className="text-[10px] text-primary hover:underline font-bold flex items-center gap-0.5"
-              >
-                <CornerDownLeft className="h-3 w-3" /> Use Draft
-              </button>
-            </div>
-            <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs leading-relaxed font-medium italic relative group">
-              "{activeThread.aiDraft}"
-            </div>
-          </div>
+          {/* Send */}
+          <button
+            onClick={() => sendText(input)}
+            disabled={!input.trim() || loading}
+            className="p-2.5 bg-primary hover:bg-primary-hover disabled:bg-muted text-white rounded-xl transition-all shrink-0 disabled:opacity-50"
+          >
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+          </button>
         </div>
-
-        <div className="mt-auto pt-4 border-t border-border flex items-center gap-2 text-[10px] text-muted font-semibold">
-          <Check className="h-4 w-4 text-emerald-500" />
-          <span>Real-time analysis powered by Gemini</span>
-        </div>
+        <p className="text-[10px] text-subtle text-center mt-2">
+          Press Enter to send • Shift+Enter for new line • Drop files to scan with OCR
+        </p>
       </div>
     </div>
   );
