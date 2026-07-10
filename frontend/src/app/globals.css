@@ -68,25 +68,26 @@
    ========================================================================== */
 
 html.dark {
-  --background: #4A4A4A;
-  --card: #565656;
-  --input: #636363;
+  --background: #090B11;
+  --card: #121520;
+  --input: #1A1F30;
 
-  --sidebar: #3D3D3D;
-  --sidebar-foreground: #FFFFFF;
+  --sidebar: #06080D;
+  --sidebar-foreground: #F8FAFC;
 
-  --foreground: #F7F7F7;
-  --muted: #D1D1D1;
-  --subtle: #A8A8A8;
+  --foreground: #F8FAFC;
+  --muted: #94A3B8;
+  --subtle: #64748B;
 
-  --primary: #6FA8FF;
-  --primary-hover: #5B94EC;
+  --primary: #3B82F6;
+  --primary-hover: #2563EB;
 
-  --accent: #56C48A;
-  --accent-hover: #46AE78;
+  --accent: #10B981;
+  --accent-hover: #059669;
 
-  --border: #707070;
+  --border: #1E293B;
 }
+
 
 /* ==========================================================================
    GLOBAL

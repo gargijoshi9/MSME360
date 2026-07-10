@@ -105,15 +105,18 @@ export default function AuthenticatedLayout({ children }) {
             >
               {darkMode ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-muted" />}
             </button>
-            
-            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-input border border-border">
-              <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase">
+            <Link 
+              href="/settings"
+              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-input border border-border hover:bg-input/80 hover:border-primary/30 transition-all duration-150 group"
+              title="View Profile"
+            >
+              <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase group-hover:bg-primary group-hover:text-white transition-all duration-150">
                 {user?.ownerName ? user.ownerName.charAt(0) : 'U'}
               </div>
-              <span className="text-sm font-semibold text-muted max-w-[120px] truncate hidden sm:inline">
+              <span className="text-sm font-semibold text-muted max-w-[120px] truncate hidden sm:inline group-hover:text-foreground transition-all duration-150">
                 {user?.ownerName || 'User'}
               </span>
-            </div>
+            </Link>
 
             <button
               onClick={handleLogout}
