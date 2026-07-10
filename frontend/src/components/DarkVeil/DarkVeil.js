@@ -80,11 +80,11 @@ void main(){
 `;
 
 export default function DarkVeil({
-  hueShift = 0,
+  hueShift = 47,
   noiseIntensity = 0,
   scanlineIntensity = 0,
-  speed = 0.5,
-  scanlineFrequency = 0,
+  speed = 2.6,
+  scanlineFrequency = 2.5,
   warpAmount = 0,
   resolutionScale = 1,
   lightMode = false
@@ -112,13 +112,17 @@ export default function DarkVeil({
     const gl = renderer.gl;
     const geometry = new Triangle(gl);
 
+    // Calculate active hue shift universally inside the component.
+    // Shifts by 180 degrees in light mode to balance color inversion.
+    const activeHueShift = lightMode ? (hueShift + 180) % 360 : hueShift;
+
     const program = new Program(gl, {
       vertex,
       fragment,
       uniforms: {
         uTime: { value: 0 },
         uResolution: { value: new Vec2() },
-        uHueShift: { value: hueShift },
+        uHueShift: { value: activeHueShift },
         uNoise: { value: noiseIntensity },
         uScan: { value: scanlineIntensity },
         uScanFreq: { value: scanlineFrequency },
@@ -144,7 +148,7 @@ export default function DarkVeil({
 
     const loop = () => {
       program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
-      program.uniforms.uHueShift.value = hueShift;
+      program.uniforms.uHueShift.value = activeHueShift;
       program.uniforms.uNoise.value = noiseIntensity;
       program.uniforms.uScan.value = scanlineIntensity;
       program.uniforms.uScanFreq.value = scanlineFrequency;

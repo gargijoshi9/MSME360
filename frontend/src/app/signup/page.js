@@ -305,12 +305,7 @@ export default function SignupPage() {
   return (
     <div className="relative min-h-screen bg-background text-foreground flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200 overflow-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
-        <DarkVeil
-          hueShift={47}
-          speed={2.6}
-          scanlineFrequency={2.5}
-          lightMode={!darkMode}
-        />
+        <DarkVeil lightMode={!darkMode} />
       </div>
 
       {/* Brand */}

@@ -151,12 +151,7 @@ export default function LandingPage() {
         {/* Hero */}
         <section className="relative overflow-hidden min-h-[calc(100vh-76px)] flex flex-col justify-center items-center text-center border-b border-border py-12">
           <div className="absolute inset-0 z-0 pointer-events-none opacity-45">
-            <DarkVeil
-              hueShift={47}
-              speed={2.6}
-              scanlineFrequency={2.5}
-              lightMode={!darkMode}
-            />
+            <DarkVeil lightMode={!darkMode} />
           </div>
 
           <div className="container mx-auto px-6 relative z-10 max-w-4xl">
