@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
+import DarkVeil from '@/components/DarkVeil/DarkVeil';
 import {
   Zap,
   AlertTriangle,
@@ -154,6 +155,13 @@ const inputClass = (hasIcon, hasError) =>
 // ── Main component ───────────────────────────────────────────────────────────
 
 export default function SignupPage() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (document.documentElement.classList.contains('dark')) {
+      setDarkMode(true);
+    }
+  }, []);
   const router = useRouter();
 
   const [step, setStep] = useState(1);
@@ -295,17 +303,25 @@ export default function SignupPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200 overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
+        <DarkVeil
+          hueShift={47}
+          speed={2.6}
+          scanlineFrequency={2.5}
+          lightMode={!darkMode}
+        />
+      </div>
 
       {/* Brand */}
-      <Link href="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight text-primary mb-6">
+      <Link href="/" className="relative z-10 flex items-center gap-2 font-bold text-2xl tracking-tight text-primary mb-6">
         <span className="p-1.5 bg-primary text-white rounded-lg shadow-sm">
           <Zap className="h-5 w-5 fill-current" />
         </span>
         MSME360
       </Link>
 
-      <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-xl p-8 transition-colors duration-200">
+      <div className="relative z-10 w-full max-w-lg bg-card/90 backdrop-blur-md border border-border rounded-2xl shadow-xl p-8 transition-colors duration-200">
 
         <h2 className="text-2xl font-bold tracking-tight text-center mb-1">Create your account</h2>
         <p className="text-sm text-muted text-center mb-6">

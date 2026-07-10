@@ -5,9 +5,17 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/utils/api';
 import { Zap, AlertTriangle, CheckCircle2, ArrowRight, RefreshCw } from 'lucide-react';
+import DarkVeil from '@/components/DarkVeil/DarkVeil';
 
 export default function VerifyOtpPage() {
   const router = useRouter();
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (document.documentElement.classList.contains('dark')) {
+      setDarkMode(true);
+    }
+  }, []);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
@@ -92,16 +100,25 @@ export default function VerifyOtpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center px-6 py-12 transition-colors duration-200">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col justify-center items-center px-6 py-12 transition-colors duration-200 overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
+        <DarkVeil
+          hueShift={47}
+          speed={2.6}
+          scanlineFrequency={2.5}
+          lightMode={!darkMode}
+        />
+      </div>
+
       {/* Brand Header */}
-      <Link href="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight text-primary mb-8">
+      <Link href="/" className="relative z-10 flex items-center gap-2 font-bold text-2xl tracking-tight text-primary mb-8">
         <span className="p-1.5 bg-primary text-white rounded-lg shadow-sm">
           <Zap className="h-5 w-5 fill-current" />
         </span>
         MSME360
       </Link>
 
-      <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-xl p-8 transition-colors duration-200">
+      <div className="relative z-10 w-full max-w-md bg-card/90 backdrop-blur-md border border-border rounded-2xl shadow-xl p-8 transition-colors duration-200">
         <h2 className="text-2xl font-bold tracking-tight text-center mb-1">Verify your email</h2>
         <p className="text-sm text-muted text-center mb-6">
           We sent a 6-digit verification code to <span className="font-semibold text-foreground">{email || 'your email'}</span>.

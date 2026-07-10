@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import DarkVeil from '@/components/DarkVeil/DarkVeil';
 import {
   Inbox,
   Sparkles,
@@ -148,14 +149,15 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden pt-20 pb-16 text-center border-b border-border">
-          <div
-            className="absolute inset-0 z-0 pointer-events-none"
-            style={{
-              background:
-                'radial-gradient(ellipse 80% 60% at 50% -10%, color-mix(in srgb, var(--primary) 12%, transparent), transparent)',
-            }}
-          />
+        <section className="relative overflow-hidden min-h-[calc(100vh-76px)] flex flex-col justify-center items-center text-center border-b border-border py-12">
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-45">
+            <DarkVeil
+              hueShift={47}
+              speed={2.6}
+              scanlineFrequency={2.5}
+              lightMode={!darkMode}
+            />
+          </div>
 
           <div className="container mx-auto px-6 relative z-10 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-primary text-xs font-semibold mb-6">
