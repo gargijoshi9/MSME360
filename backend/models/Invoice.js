@@ -66,9 +66,12 @@ const InvoiceSchema = new mongoose.Schema({
   lineItems: [LineItemSchema],
 
   // Totals (in INR by default)
-  subtotal:    { type: Number, default: 0 },   // ex-GST total
-  totalGST:    { type: Number, default: 0 },   // CGST + SGST or IGST
-  grandTotal:  { type: Number, default: 0 },   // subtotal + totalGST
+  subtotal:     { type: Number, default: 0 },   // ex-GST total
+  totalGST:     { type: Number, default: 0 },   // CGST + SGST or IGST
+  grandTotal:   { type: Number, default: 0 },   // subtotal + totalGST
+  discount:     { type: Number, default: 0 },
+  extraCharges: { type: Number, default: 0 },
+  exemptGst:    { type: Boolean, default: false },
   currency:    { type: String, default: 'INR', trim: true },
 
   // Payment tracking

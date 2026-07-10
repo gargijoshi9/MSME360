@@ -15,7 +15,8 @@ import {
   User, 
   Lock, 
   Zap, 
-  Loader2 
+  Loader2,
+  Sparkles
 } from 'lucide-react';
 
 export default function AuthenticatedLayout({ children }) {
@@ -78,11 +79,12 @@ export default function AuthenticatedLayout({ children }) {
   }
 
   const navItems = [
-    { name: 'Dashboard',       path: '/dashboard',  icon: Home,        locked: false },
-    { name: 'Smart Inbox',     path: '/inbox',      icon: Inbox,       locked: false },
-    { name: 'Finances',        path: '/finances',   icon: ReceiptText, locked: false },
-    { name: 'Vendor Directory',path: '/vendors',    icon: Store,       locked: true, label: 'Soon' },
-    { name: 'Settings',        path: '/settings',   icon: Settings,    locked: false },
+    { name: 'Dashboard',         path: '/dashboard',   icon: Home,        locked: false },
+    { name: 'AI Command Centre', path: '/inbox',       icon: Sparkles,    locked: false },
+    { name: 'Smart Inbox',       path: '/smart-inbox', icon: Inbox,       locked: false },
+    { name: 'Finances',          path: '/finances',    icon: ReceiptText, locked: false },
+    { name: 'Vendor Directory',  path: '/vendors',     icon: Store,       locked: true, label: 'Soon' },
+    { name: 'Settings',          path: '/settings',    icon: Settings,    locked: false },
   ];
 
   return (

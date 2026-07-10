@@ -159,9 +159,21 @@ function InvoicePreviewCard({ preview, draftData, onConfirm, responseText }) {
           <div className="flex justify-between text-xs text-muted">
             <span>Subtotal</span><span>₹{preview.subtotal?.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-xs text-muted">
-            <span>GST</span><span>₹{preview.totalGST?.toFixed(2)}</span>
-          </div>
+          {!preview.exemptGst && (preview.totalGST || 0) > 0 && (
+            <div className="flex justify-between text-xs text-muted">
+              <span>GST</span><span>₹{preview.totalGST?.toFixed(2)}</span>
+            </div>
+          )}
+          {preview.discount > 0 && (
+            <div className="flex justify-between text-xs text-emerald-600 font-semibold">
+              <span>Discount</span><span>-₹{preview.discount?.toFixed(2)}</span>
+            </div>
+          )}
+          {preview.extraCharges > 0 && (
+            <div className="flex justify-between text-xs text-amber-600 font-semibold">
+              <span>Extra Charges</span><span>+₹{preview.extraCharges?.toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex justify-between text-sm font-bold text-foreground">
             <span>Total</span><span>₹{preview.grandTotal?.toFixed(2)}</span>
           </div>
