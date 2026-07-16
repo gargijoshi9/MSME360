@@ -34,7 +34,7 @@ const protect = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'User no longer exists.' });
     }
 
-    req.user = { id: user._id, email: user.email };
+    req.user = { id: user._id.toString(), email: user.email };
     next();
   } catch (err) {
     return res.status(401).json({ success: false, message: 'Invalid or expired token.' });

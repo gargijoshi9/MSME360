@@ -65,22 +65,9 @@ export default function SettingsPage() {
   const handleConnectIntegration = (platform) => {
     if (platform === 'whatsapp') {
       triggerToast('WhatsApp Business webhook connection will unlock in Phase 2. Backend routes are prepared.', 'info');
-      return;
+    } else if (platform === 'gmail') {
+      triggerToast('Gmail OAuth2 / PubSub integration will unlock in Phase 2. Backend services are prepared.', 'info');
     }
-
-    if (platform === 'gmail') {
-      const tenantId = user?._id || user?.id;
-      if (!tenantId) {
-        triggerToast('Unable to initiate Gmail connect. Please sign out and sign in again.', 'info');
-        return;
-      }
-
-      const redirectUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/gmail/auth?tenantId=${tenantId}`;
-      window.location.href = redirectUrl;
-      return;
-    }
-
-    triggerToast('Integration will unlock in Phase 2. Backend routes are prepared.', 'info');
   };
 
   return (

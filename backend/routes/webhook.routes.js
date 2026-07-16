@@ -1,19 +1,7 @@
-'use strict';
-
-const express = require('express');
-const router = express.Router();
-const webhookController = require('../controllers/webhookController');
-
 /**
- * PHASE 2 WHATSAPP ENDPOINTS
- * Using '/webhook' ensures both GET and POST hit the same endpoint structure
+ * NOT USED — Phase 1 (auth module)
+ * webhook.routes.js will be mounted in Phase 2.
+ *
+ * IMPORTANT (tenant isolation): Any handler mounted here MUST follow the
+ * tenant isolation rule in models/User.js — no fallback to first user.
  */
-router.get('/webhook', webhookController.verifyWhatsapp);
-router.post('/webhook', webhookController.handleInboundWhatsapp);
-
-/**
- * PHASE 2 GMAIL PUB/SUB ENDPOINT
- */
-router.post('/gmail', webhookController.handleInboundGmailPush);
-
-module.exports = router;
