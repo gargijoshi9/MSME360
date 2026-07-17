@@ -37,7 +37,19 @@ coverage/
 .nyc_output/
 
 # upload section
-uploads/
+backend/uploads/
 
 # ── Google API Credentials (SECURITY CRITICAL) ─────────────────────────────
 backend/google-credentials.json
+
+# ── Next.js / Build Output ──────────────────────────────────────────────────
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+.eslintcache
+
+# ── Package Cache ──────────────────────────────────────────────────────────
+.cache/
+.pnp
+.pnp.*
