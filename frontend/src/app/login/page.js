@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
-import { Zap, AlertTriangle, ArrowRight, ShieldAlert, KeyRound } from 'lucide-react';
+import { Zap, AlertTriangle, ArrowRight, ShieldAlert, KeyRound, ArrowLeft } from 'lucide-react';
 import DarkVeil from '@/components/DarkVeil/DarkVeil';
 
 export default function LoginPage() {
@@ -85,6 +85,12 @@ export default function LoginPage() {
       <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
         <DarkVeil lightMode={!darkMode} />
       </div>
+
+      {/* Back to Home Link */}
+      <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-sm font-semibold text-muted hover:text-primary transition-colors z-10">
+        <ArrowLeft className="h-4 w-4" />
+        Back to Home
+      </Link>
 
       {/* Brand Header */}
       <Link href="/" className="relative z-10 flex items-center gap-2 font-bold text-2xl tracking-tight text-primary mb-8">

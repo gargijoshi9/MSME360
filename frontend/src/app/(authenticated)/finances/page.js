@@ -62,7 +62,7 @@ function BarChart({ data, valueKey, label, color = 'var(--primary)' }) {
       <h4 className="text-xs font-semibold uppercase tracking-wider text-muted">{label}</h4>
       <div className="flex items-end gap-1.5 h-24">
         {data.map((d, i) => (
-          <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
+          <div key={i} className="flex-1 h-full flex flex-col justify-end items-center gap-1 group relative">
             <div
               className="w-full rounded-t-md transition-all duration-500 hover:opacity-80"
               style={{
@@ -281,6 +281,7 @@ export default function FinancesPage() {
             <div><span className="text-muted">Billed </span><span className="font-bold">₹{fmt(overview.thisMonth.billed)}</span></div>
             <div><span className="text-muted">Collected </span><span className="font-bold text-emerald-600">₹{fmt(overview.thisMonth.paid)}</span></div>
             <div><span className="text-muted">GST </span><span className="font-bold text-violet-600">₹{fmt(overview.thisMonth.gst)}</span></div>
+            <div><span className="text-muted">Discounts </span><span className="font-bold text-rose-500">₹{fmt(overview.thisMonth.discount || 0)}</span></div>
             <div><span className="text-muted">Invoices </span><span className="font-bold">{overview.thisMonth.count}</span></div>
           </div>
         </div>

@@ -1,22 +1,6 @@
 version: '3.9'
 
 services:
-  backend:
-    build: ./backend
-    container_name: msme360-backend
-    ports:
-      - "5001:5001"
-    env_file:
-      - ./backend/.env            # reads all vars from your existing backend .env
-    environment:
-      - CHROMA_URL=http://chromadb:8000    # override: point to Docker container, not localhost
-    volumes:
-      - model_cache:/app/.cache
-      - uploads:/app/uploads
-    depends_on:
-      - chromadb
-    restart: unless-stopped
-
   chromadb:
     image: chromadb/chroma:0.5.11
     container_name: msme360-chromadb

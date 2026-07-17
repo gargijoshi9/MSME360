@@ -14,13 +14,14 @@ const getOverview = async (req, res) => {
     const [allTime, thisMonth, overdueCount] = await Promise.all([
       // All-time aggregation
       Invoice.aggregate([
-        { $match: { userId: require('mongoose').Types.ObjectId.createFromHexString(userId), status: { $ne: 'cancelled' } } },
+        { $match: { userId: new (require('mongoose').Types.ObjectId)(userId), status: { $ne: 'cancelled' } } },
         { $group: {
           _id:         null,
           totalBilled: { $sum: '$grandTotal' },
           totalPaid:   { $sum: '$amountPaid' },
           totalDue:    { $sum: '$amountDue' },
           totalGST:    { $sum: '$totalGST' },
+          totalDiscount: { $sum: '$discount' },
           count:       { $sum: 1 },
         }},
       ]),
@@ -28,7 +29,7 @@ const getOverview = async (req, res) => {
       // This month
       Invoice.aggregate([
         { $match: {
-          userId:    require('mongoose').Types.ObjectId.createFromHexString(userId),
+          userId:    new (require('mongoose').Types.ObjectId)(userId),
           createdAt: { $gte: monthStart },
           status:    { $ne: 'cancelled' },
         }},
@@ -37,6 +38,7 @@ const getOverview = async (req, res) => {
           monthlyBilled:  { $sum: '$grandTotal' },
           monthlyPaid:    { $sum: '$amountPaid' },
           monthlyGST:     { $sum: '$totalGST' },
+          monthlyDiscount: { $sum: '$discount' },
           monthlyCount:   { $sum: 1 },
         }},
       ]),
@@ -48,8 +50,8 @@ const getOverview = async (req, res) => {
       }),
     ]);
 
-    const all = allTime[0]  || { totalBilled: 0, totalPaid: 0, totalDue: 0, totalGST: 0, count: 0 };
-    const mon = thisMonth[0] || { monthlyBilled: 0, monthlyPaid: 0, monthlyGST: 0, monthlyCount: 0 };
+    const all = allTime[0]  || { totalBilled: 0, totalPaid: 0, totalDue: 0, totalGST: 0, totalDiscount: 0, count: 0 };
+    const mon = thisMonth[0] || { monthlyBilled: 0, monthlyPaid: 0, monthlyGST: 0, monthlyDiscount: 0, monthlyCount: 0 };
 
     return res.json({
       success: true,
@@ -59,12 +61,14 @@ const getOverview = async (req, res) => {
           totalPaid:   Math.round(all.totalPaid   * 100) / 100,
           totalDue:    Math.round(all.totalDue     * 100) / 100,
           totalGST:    Math.round(all.totalGST     * 100) / 100,
+          totalDiscount: Math.round((all.totalDiscount || 0) * 100) / 100,
           invoiceCount: all.count,
         },
         thisMonth: {
           billed:  Math.round(mon.monthlyBilled * 100) / 100,
           paid:    Math.round(mon.monthlyPaid   * 100) / 100,
           gst:     Math.round(mon.monthlyGST    * 100) / 100,
+          discount: Math.round((mon.monthlyDiscount || 0) * 100) / 100,
           count:   mon.monthlyCount,
         },
         overdueCount,
@@ -82,13 +86,10 @@ const getOverview = async (req, res) => {
 const getGstSummary = async (req, res) => {
   try {
     const userId = req.user.id;
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     const data = await Invoice.aggregate([
       { $match: {
-        userId:    require('mongoose').Types.ObjectId.createFromHexString(userId),
-        createdAt: { $gte: sixMonthsAgo },
+        userId:    new (require('mongoose').Types.ObjectId)(userId),
         status:    { $nin: ['cancelled', 'draft'] },
       }},
       { $group: {
@@ -127,13 +128,10 @@ const getGstSummary = async (req, res) => {
 const getCashFlow = async (req, res) => {
   try {
     const userId = req.user.id;
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     const data = await Invoice.aggregate([
       { $match: {
-        userId:    require('mongoose').Types.ObjectId.createFromHexString(userId),
-        createdAt: { $gte: sixMonthsAgo },
+        userId:    new (require('mongoose').Types.ObjectId)(userId),
         status:    { $ne: 'cancelled' },
       }},
       { $group: {

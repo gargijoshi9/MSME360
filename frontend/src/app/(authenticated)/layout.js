@@ -80,7 +80,7 @@ export default function AuthenticatedLayout({ children }) {
 
   const navItems = [
     { name: 'Dashboard',         path: '/dashboard',   icon: Home,        locked: false },
-    { name: 'AI Command Centre', path: '/inbox',       icon: Sparkles,    locked: false },
+    { name: 'AI Command Centre', path: '/ai-command-center', icon: Sparkles,    locked: false },
     { name: 'Smart Inbox',       path: '/smart-inbox', icon: Inbox,       locked: false },
     { name: 'Finances',          path: '/finances',    icon: ReceiptText, locked: false },
     { name: 'Vendor Directory',  path: '/vendors',     icon: Store,       locked: true, label: 'Soon' },

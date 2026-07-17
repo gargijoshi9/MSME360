@@ -284,11 +284,7 @@ export default function SignupPage() {
         taxRate:      Number(form.taxRate),
       });
 
-      setSuccess(response.message || 'Account created! Redirecting to email verification...');
-
-      setTimeout(() => {
-        router.push(`/verify-otp?email=${encodeURIComponent(form.email.trim().toLowerCase())}`);
-      }, 1500);
+      router.push(`/verify-otp?email=${encodeURIComponent(form.email.trim().toLowerCase())}`);
     } catch (err) {
       setApiError(err.message || 'An error occurred during signup. Please try again.');
     } finally {
@@ -404,6 +400,13 @@ export default function SignupPage() {
             >
               Continue <ArrowRight className="h-4 w-4" />
             </button>
+
+            <Link
+              href="/"
+              className="w-full py-3.5 border border-border text-muted hover:text-foreground hover:border-foreground/30 font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back to Home
+            </Link>
 
             <p className="text-sm text-center text-muted">
               Already have an account?{' '}
