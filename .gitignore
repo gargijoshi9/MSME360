@@ -38,3 +38,6 @@ coverage/
 
 # upload section
 uploads/
+
+# ── Google API Credentials (SECURITY CRITICAL) ─────────────────────────────
+backend/google-credentials.json
