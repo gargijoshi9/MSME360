@@ -269,9 +269,6 @@ export default function DashboardPage() {
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-subtle">Classified Today</span>
             <h3 className="text-3xl font-extrabold mt-1">{classifiedToday}</h3> 
-            <span className="text-[11px] font-medium text-emerald-500 flex items-center gap-1 mt-1">
-              +14% since yesterday
-            </span>
           </div>
           <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl">
             <Sparkles className="h-6 w-6" />

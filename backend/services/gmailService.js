@@ -84,10 +84,10 @@ async function fetchMessageById(tenantId, messageId) {
 async function listNewMessageIds(tenantId, startHistoryId) {
   const auth = await getOAuth2ClientForTenant(tenantId);
   const gmail = google.gmail({ version: 'v1', auth });
-
+ 
   const messageIds = new Set();
   let pageToken;
-
+ 
   do {
     const resp = await gmail.users.history.list({
       userId: 'me',
@@ -95,14 +95,25 @@ async function listNewMessageIds(tenantId, startHistoryId) {
       historyTypes: ['messageAdded'],
       pageToken,
     });
-
+ 
     (resp.data.history || []).forEach(h => {
-      (h.messagesAdded || []).forEach(m => messageIds.add(m.message.id));
+      (h.messagesAdded || []).forEach(m => {
+        const labelIds = m.message?.labelIds || [];
+ 
+        // Skip anything that's a sent message (your own reply) rather than
+        // a genuine inbound message landing in the inbox.
+        const isSent = labelIds.includes('SENT');
+        const isInbox = labelIds.includes('INBOX');
+ 
+        if (isSent || !isInbox) return;
+ 
+        messageIds.add(m.message.id);
+      });
     });
-
+ 
     pageToken = resp.data.nextPageToken;
   } while (pageToken);
-
+ 
   return Array.from(messageIds);
 }
 

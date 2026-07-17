@@ -90,6 +90,7 @@ exports.syncGmailHistory = async (tenant, newHistoryId) => {
           text: emailData.snippet,
           receivedAt: new Date(),
           raw: emailData.rawPayload,
+          direction: 'inbound'
         });
         syncedCount++;
       } catch (perMessageErr) {
