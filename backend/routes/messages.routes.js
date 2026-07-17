@@ -53,9 +53,20 @@ router.get('/gmail/callback', async (req, res) => {
     oauth2Client.setCredentials(tokens);
     const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
     const profile = await gmail.users.getProfile({ userId: 'me' });
+    
     tenant.googleEmail = profile.data.emailAddress;
+    // Set the baseline historyId immediately upon OAuth login
+    tenant.lastGmailHistoryId = profile.data.historyId;
 
     await tenant.save();
+
+    // Automatically establish the Gmail Pub/Sub watch subscription
+    try {
+      await setupPubSubWatch(tenant._id);
+      console.log(`[Gmail Auth Callback] Successfully established Pub/Sub watch for tenant ${tenant._id}`);
+    } catch (watchErr) {
+      console.error(`[Gmail Auth Callback] Failed to automatically register Pub/Sub watch: ${watchErr.message}`);
+    }
 
     // FIX: redirect back to the frontend settings page instead of dead-ending
     // on a static HTML string the user has to manually navigate away from.
@@ -216,6 +227,19 @@ router.post('/messages/reply', protect, async (req, res) => {
   } catch (err) {
     console.error('[Outbound Pipeline Error Details]:', err);
     return res.status(500).json({ success: false, message: 'Critical pipeline reply execution fault.', error: err.message });
+  }
+});
+
+// GET /api/auth/me — retrieves the current user profile (with googleEmail) from DB
+router.get('/auth/me', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('+googleEmail');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    return res.status(200).json({ success: true, user });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error.', error: err.message });
   }
 });
 

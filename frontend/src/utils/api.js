@@ -175,5 +175,9 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ messageId }),
     });
+  },
+
+  async getProfile() {
+    return request('/auth/me');
   }
 };

@@ -47,6 +47,28 @@ const MessageSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now
+  },
+  externalId: {
+    type: String,
+    sparse: true
+  },
+  category: {
+    type: String,
+    default: 'Inquiry'
+  },
+  priority: {
+    type: String,
+    enum: ['high', 'medium', 'low'],
+    default: 'medium'
+  },
+  summary: {
+    type: String
+  },
+  receivedAt: {
+    type: Date
+  },
+  raw: {
+    type: mongoose.Schema.Types.Mixed
   }
 }, {
   timestamps: true 

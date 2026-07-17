@@ -3,6 +3,7 @@
 const Message = require('../models/Message');
 const User    = require('../models/User');
 const { fetchMessageById, listNewMessageIds } = require('../services/gmailService');
+const { classifyEmail } = require('../services/classifierService');
 
 /**
  * GET /api/messages
@@ -81,6 +82,11 @@ exports.syncGmailHistory = async (tenant, newHistoryId) => {
 
         const emailData = await fetchMessageById(tenant._id, messageId);
 
+        // Classify the email using Gemini Flash
+        const classification = await classifyEmail(
+          `Subject: ${emailData.subject}\nSnippet: ${emailData.snippet}`
+        );
+
         await Message.create({
           tenantId: tenant._id,
           platform: 'gmail',
@@ -90,7 +96,10 @@ exports.syncGmailHistory = async (tenant, newHistoryId) => {
           text: emailData.snippet,
           receivedAt: new Date(),
           raw: emailData.rawPayload,
-          direction: 'inbound'
+          direction: 'inbound',
+          category: classification.category,
+          priority: classification.priority,
+          summary: classification.summary
         });
         syncedCount++;
       } catch (perMessageErr) {

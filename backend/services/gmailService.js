@@ -139,9 +139,16 @@ async function setupPubSubWatch(tenantId) {
     const expirationEpoch = response.data.expiration;
     console.log(`[Gmail Pub/Sub] Watch established for ${tenantId}. Expires at epoch: ${expirationEpoch}`);
 
-    await User.findByIdAndUpdate(tenantId, {
-      gmailWatchExpiration: new Date(Number(expirationEpoch)),
-    });
+    const profile = await gmail.users.getProfile({ userId: 'me' });
+    const currentHistoryId = profile.data.historyId;
+
+    const user = await User.findById(tenantId);
+    user.gmailWatchExpiration = new Date(Number(expirationEpoch));
+    if (!user.lastGmailHistoryId && currentHistoryId) {
+      user.lastGmailHistoryId = currentHistoryId;
+      console.log(`[Gmail Service] Initialized lastGmailHistoryId to ${currentHistoryId} for tenant ${tenantId}`);
+    }
+    await user.save();
 
     return response.data;
   } catch (error) {

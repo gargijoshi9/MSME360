@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { api } from '../../../utils/api';
 import { 
   Settings, 
   User, 
@@ -32,19 +33,39 @@ export default function SettingsPage() {
   const [toastType, setToastType] = useState('info'); // 'info', 'success'
 
   useEffect(() => {
-    const userData = localStorage.getItem('msme360_user');
-    if (userData) {
+    const fetchUserData = async () => {
       try {
-        const parsed = JSON.parse(userData);
-        setUser(parsed);
-        setFormData((prev) => ({
-          ...prev,
-          companyName: parsed.companyName || '',
-          ownerName: parsed.ownerName || '',
-          email: parsed.email || '',
-        }));
-      } catch (_) {}
-    }
+        const res = await api.getProfile();
+        if (res?.success && res.user) {
+          setUser(res.user);
+          localStorage.setItem('msme360_user', JSON.stringify(res.user));
+          setFormData((prev) => ({
+            ...prev,
+            companyName: res.user.companyName || '',
+            ownerName: res.user.ownerName || '',
+            email: res.user.email || '',
+          }));
+        }
+      } catch (err) {
+        console.error('Failed to fetch fresh user profile:', err);
+        // Fallback to local storage if API fails/offline
+        const userData = localStorage.getItem('msme360_user');
+        if (userData) {
+          try {
+            const parsed = JSON.parse(userData);
+            setUser(parsed);
+            setFormData((prev) => ({
+              ...prev,
+              companyName: parsed.companyName || '',
+              ownerName: parsed.ownerName || '',
+              email: parsed.email || '',
+            }));
+          } catch (_) {}
+        }
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   useEffect(() => {
@@ -245,18 +266,30 @@ export default function SettingsPage() {
                   <div>
                     <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
                       Gmail Google Accounts 
-                      <span className="text-[9px] bg-input text-muted px-1.5 py-0.5 rounded font-bold uppercase">Phase 2</span>
+                      {user?.googleEmail ? (
+                        <span className="text-[9px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded font-bold uppercase">Connected</span>
+                      ) : (
+                        <span className="text-[9px] bg-input text-muted px-1.5 py-0.5 rounded font-bold uppercase">Phase 2</span>
+                      )}
                     </h4>
                     <p className="text-[11px] text-muted leading-relaxed font-medium mt-0.5">
-                      Sync customer mail histories and auto-triage emails using OAuth2 client flows.
+                      {user?.googleEmail 
+                        ? `Connected to ${user.googleEmail}. Incoming emails will be automatically classified.`
+                        : 'Sync customer mail histories and auto-triage emails using OAuth2 client flows.'
+                      }
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => handleConnectIntegration('gmail')}
-                  className="px-3.5 py-2 bg-card border border-border hover:bg-input rounded-xl font-bold text-[11px] transition-all flex items-center gap-1.5 self-start sm:self-center shrink-0"
+                  className={`px-3.5 py-2 bg-card border border-border rounded-xl font-bold text-[11px] transition-all flex items-center gap-1.5 self-start sm:self-center shrink-0 ${
+                    user?.googleEmail 
+                      ? 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10' 
+                      : 'hover:bg-input text-foreground'
+                  }`}
                 >
-                  <LinkIcon className="h-3.5 w-3.5 text-subtle" /> Connect OAuth
+                  <LinkIcon className="h-3.5 w-3.5" /> 
+                  {user?.googleEmail ? 'Reconnect Gmail' : 'Connect OAuth'}
                 </button>
               </div>
             </div>
