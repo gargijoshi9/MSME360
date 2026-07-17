@@ -39,6 +39,8 @@ router.get('/gmail/callback', async (req, res) => {
   const { code, state: tenantId } = req.query;
   if (!code || !tenantId) return res.status(400).send('Missing callback initialization data.');
 
+  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
   try {
     const { tokens } = await oauth2Client.getToken(code);
     const tenant = await User.findById(tenantId);
@@ -47,16 +49,19 @@ router.get('/gmail/callback', async (req, res) => {
     tenant.googleAccessToken = tokens.access_token;
     if (tokens.refresh_token) tenant.googleRefreshToken = tokens.refresh_token;
     if (tokens.expiry_date) tenant.googleTokenExpiry = new Date(tokens.expiry_date);
-    
+
     oauth2Client.setCredentials(tokens);
     const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
     const profile = await gmail.users.getProfile({ userId: 'me' });
     tenant.googleEmail = profile.data.emailAddress;
 
     await tenant.save();
-    return res.status(200).send('<h1>✅ Gmail Authenticated Successfully! You can close this tab now.</h1>');
+
+    // FIX: redirect back to the frontend settings page instead of dead-ending
+    // on a static HTML string the user has to manually navigate away from.
+    return res.redirect(`${FRONTEND_URL}/settings?gmail=connected`);
   } catch (error) {
-    return res.status(500).send('OAuth Registration Error: ' + error.message);
+    return res.redirect(`${FRONTEND_URL}/settings?gmail=error&message=${encodeURIComponent(error.message)}`);
   }
 });
 
@@ -82,15 +87,18 @@ router.post('/gmail/watch-renew', protect, async (req, res) => {
   }
 });
 
-// ── Inbox Pipeline Feed & Metrics (COMBINED CLEANLY) ──────────────────────────
+// ── Inbox Pipeline Feed & Metrics ──────────────────────────────
 router.get('/messages', protect, messageController.getMessages);
 
+// FIX: scoped to the authenticated tenant only — was previously a global
+// count across every tenant in the database.
 router.get('/messages/metrics/today', protect, async (req, res) => {
   try {
     const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
     const endOfToday = new Date(); endOfToday.setHours(23, 59, 59, 999);
 
     const classificationCount = await Message.countDocuments({
+      tenantId: req.user.id,
       createdAt: { $gte: startOfToday, $lte: endOfToday }
     });
     return res.status(200).json({ success: true, classifiedToday: classificationCount });
@@ -99,19 +107,19 @@ router.get('/messages/metrics/today', protect, async (req, res) => {
   }
 });
 
-// ── Secure Dynamic Reply Pipeline (Permanent Multi-Tenant Solution) ──
+// ── Secure Dynamic Reply Pipeline (Per-Tenant) ──
 router.post('/messages/reply', protect, async (req, res) => {
   try {
     const { recipientEmail, subject, replyText, threadId } = req.body;
 
-    // 🎯 CHANGED LOOKUP TO EMAIL: Bypasses strict frontend JWT token ID mismatches safely!
-    const currentUser = await User.findOne({ 
-      $or: [
-        { email: req.user?.email },
-        { email: 'reva.kale2005@gmail.com' } // Local dev backup
-      ]
-    }).select('+googleAccessToken +googleRefreshToken');
-    
+    // FIX: derive the tenant strictly from the authenticated request.
+    // The previous $or with a hardcoded dev-email fallback meant ANY user
+    // whose req.user.email lookup failed to match would silently fall
+    // through and send/log the reply under that hardcoded account instead
+    // of their own — a cross-tenant leak. Removed entirely.
+    const currentUser = await User.findById(req.user.id)
+      .select('+googleAccessToken +googleRefreshToken');
+
     if (!currentUser || !currentUser.googleAccessToken) {
       return res.status(400).json({ 
         success: false, 
@@ -178,8 +186,12 @@ router.post('/messages/reply', protect, async (req, res) => {
     });
 
     // 5. Update state changes locally inside the database
+    // FIX: scoped to this tenant only — previously matched on
+    // { sender: recipientEmail, platform, status } with no tenantId,
+    // meaning it could resolve a DIFFERENT tenant's pending message
+    // from the same counterpart address.
     await Message.updateMany(
-      { sender: recipientEmail, platform: 'gmail', status: 'pending' },
+      { tenantId: currentUser._id, sender: recipientEmail, platform: 'gmail', status: 'pending' },
       { $set: { status: 'resolved' } }
     );
 
