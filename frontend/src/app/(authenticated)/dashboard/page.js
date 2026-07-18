@@ -298,7 +298,7 @@ export default function DashboardPage() {
               <p className="text-xs text-subtle">Click on any message below to view, edit, or directly send replies</p>
             </div>
             <Link
-              href="/message_inbox"
+              href="/smart-inbox"
               className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 shrink-0"
             >
               View Full Message <ArrowUpRight className="h-3.5 w-3.5" />
